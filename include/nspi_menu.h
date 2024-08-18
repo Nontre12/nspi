@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "nspi_pad.h"
+
 namespace nspi {
 
 struct Title {
@@ -15,21 +17,21 @@ struct Title {
 
 class Menu {
  private:
+  Pad& pad;
   std::vector<Title> dummyData;
 
   void printHeader() const;
   void printFooter() const;
 
  public:
-  Menu();
+  Menu(Pad&);
   ~Menu();
 
   Menu(const Menu&) = delete;
   Menu& operator=(const Menu&) = delete;
 
+  void handleInput();
   void print() const;
-
-  void __debug_push_back_list_element(Title title);
 };
 
 }  // namespace nspi

@@ -11,7 +11,7 @@ class App {
  private:
   Console console;
   Pad pad;
-  Menu menu;
+  Menu menu{pad};
 
   bool quit;
 

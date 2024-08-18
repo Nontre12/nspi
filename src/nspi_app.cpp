@@ -13,20 +13,7 @@ void nspi::App::mainLoop() {
       this->quit = true;
     }
 
-    // code goes here
-    if (kDown & HidNpadButton_A) {
-      this->menu.__debug_push_back_list_element(
-          {"1000000000000000", "EUR", "Tiles of Zestyria", 12});
-    }
-
-    if (kDown & HidNpadButton_Up) {
-      // focus up
-    }
-
-    if (kDown & HidNpadButton_Down) {
-      // focus down
-    }
-
+    this->menu.handleInput();
     this->menu.print();
 
     this->console.update();

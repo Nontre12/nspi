@@ -18,9 +18,24 @@ void nspi::Menu::printFooter() const {
             << "\t\t\tA - install\tY - menu\t\t\tFree: 5,00 MB\n";
 }
 
-nspi::Menu::Menu() {}
+nspi::Menu::Menu(Pad &pad) : pad(pad) {}
 
 nspi::Menu::~Menu() {}
+
+void nspi::Menu::handleInput() {
+  u64 kDown = this->pad.getButtonsDown();
+  if (kDown & HidNpadButton_A) {
+    this->dummyData.push_back({"1000000000000000", "EUR", "Tiles of Zestyria", 12});
+  }
+
+  if (kDown & HidNpadButton_Up) {
+    // focus up
+  }
+
+  if (kDown & HidNpadButton_Down) {
+    // focus down
+  }
+}
 
 void nspi::Menu::print() const {
   this->printHeader();
@@ -36,5 +51,3 @@ void nspi::Menu::print() const {
 
   this->printFooter();
 }
-
-void nspi::Menu::__debug_push_back_list_element(Title title) { this->dummyData.push_back(title); }
