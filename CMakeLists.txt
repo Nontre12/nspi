@@ -13,7 +13,11 @@ set(APP_NAME "NSPi")
 set(APP_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 # Define the target and its sources
-set(SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+set(SOURCE_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_console.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_pad.cpp
+)
 
 add_executable(${APP_NAME}.elf ${SOURCE_FILES})
 
