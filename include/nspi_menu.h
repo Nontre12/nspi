@@ -17,7 +17,7 @@ struct Title {
 
 class Menu {
  private:
-  uint16_t focusIndex = 0;
+  uint16_t focusIndex = 38;
   const uint8_t CONSOLE_WIDTH = 80;
   const uint8_t CONSOLE_HEIGHT = 44;
   const uint8_t HEADER_HEIGHT = 2;
@@ -28,6 +28,9 @@ class Menu {
 
   void printHeader() const;
   void printFooter() const;
+
+  void focusPrevious();
+  void focusNext();
 
  public:
   Menu(Pad&);

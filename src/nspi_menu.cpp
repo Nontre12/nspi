@@ -41,6 +41,20 @@ nspi::Menu::Menu(Pad& pad) : pad(pad) {
       {"70010000016753", "EUR", "Dragon Quest XI S: Echoes of an Elusive Age", 14500},
       {"70010000034592", "EUR", "Monster Hunter Rise", 10700},
       {"70010000026388", "EUR", "Resident Evil 4", 12000},
+      {"70010000000677", "EUR", "The Legend of Zelda: Link's Awakening", 5800},
+      {"70010000000413", "EUR", "Super Mario Party", 2700},
+      {"70010000000795", "EUR", "Donkey Kong Country: Tropical Freeze", 6500},
+      {"70010000022343", "EUR", "Ring Fit Adventure", 2500},
+      {"70010000008645", "EUR", "Metroid Dread", 4500},
+      {"70010000027622", "EUR", "Pokemon Shield", 11000},
+      {"70010000004206", "EUR", "Mario + Rabbids Kingdom Battle", 2900},
+      {"70010000001609", "EUR", "Kirby Star Allies", 4200},
+      {"70010000001592", "EUR", "ARMS", 2700},
+      {"70010000009644", "EUR", "Octopath Traveler II", 4800},
+      {"70010000000115", "EUR", "1-2-Switch", 1400},
+      {"70010000016812", "EUR", "New Super Mario Bros. U Deluxe", 2600},
+      {"70010000008747", "EUR", "Splatoon 3", 6100},
+      {"70010000011797", "EUR", "Crash Bandicoot N. Sane Trilogy", 5600},
   };
 }
 
@@ -53,16 +67,24 @@ void nspi::Menu::handleInput() {
   }
 
   if (kDown & HidNpadButton_Up) {
-    if (this->focusIndex != 0) {
-      this->focusIndex--;
-    }
+    this->focusPrevious();
   }
 
   if (kDown & HidNpadButton_Down) {
-    if (this->focusIndex != this->CONSOLE_HEIGHT - 4 &&
-        this->focusIndex < this->dummyData.size() - 1) {
-      this->focusIndex++;
-    }
+    this->focusNext();
+  }
+}
+
+void nspi::Menu::focusPrevious() {
+  if (this->focusIndex != 0) {
+    this->focusIndex--;
+  }
+}
+
+void nspi::Menu::focusNext() {
+  if (this->focusIndex < this->CONSOLE_HEIGHT - 4 - 1 &&
+      this->focusIndex < this->dummyData.size() - 1) {
+    this->focusIndex++;
   }
 }
 
@@ -71,6 +93,7 @@ void nspi::Menu::draw() {
 
   int index = 0;
   for (const Title& title : dummyData) {
+    if (index >= CONSOLE_HEIGHT - 4) break;
     if (index == this->focusIndex) {
       std::cout << "\033[1;41m";
     }
