@@ -20,6 +20,7 @@ class Pad {
   void update();
 
   u64 getButtonsDown() const;
+  HidAnalogStickState getStickPos() const;
 };
 
 }  // namespace nspi
