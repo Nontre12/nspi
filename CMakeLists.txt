@@ -13,16 +13,16 @@ set(APP_NAME "NSPi")
 set(APP_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 # Define the target and its sources
-set(SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/main.cpp)
+set(SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 add_executable(${APP_NAME}.elf ${SOURCE_FILES})
 
 # Include directories
 target_include_directories(${APP_NAME}.elf PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
     /opt/devkitpro/portlibs/switch/include
     lib/libnx/nx/include
-    ${CMAKE_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 # Compilation flags
@@ -41,7 +41,7 @@ target_compile_options(${APP_NAME}.elf PRIVATE
 
 # Linker flags
 target_link_options(${APP_NAME}.elf PRIVATE
-    -specs=${CMAKE_SOURCE_DIR}/lib/libnx/nx/switch.specs
+    -specs=${CMAKE_CURRENT_SOURCE_DIR}/lib/libnx/nx/switch.specs
     -g
     -march=armv8-a+crc+crypto
     -mtune=cortex-a57
@@ -61,26 +61,26 @@ target_link_libraries(${APP_NAME}.elf
 
 # Create LST file
 add_custom_command(TARGET ${APP_NAME}.elf POST_BUILD
-    COMMAND ${CMAKE_NM} -CSn ${CMAKE_SOURCE_DIR}/${APP_NAME}.elf > ${APP_NAME}.lst
+    COMMAND ${CMAKE_NM} -CSn ${CMAKE_CURRENT_SOURCE_DIR}/${APP_NAME}.elf > ${APP_NAME}.lst
     COMMENT "Creating LST symbols file from ELF (debug purposes)"
 )
 
 # Create NACP file
 add_custom_command(TARGET ${APP_NAME}.elf POST_BUILD
-    COMMAND nacptool --create ${APP_NAME} ${APP_AUTHOR_NAME} ${APP_VERSION} ${CMAKE_SOURCE_DIR}/${APP_NAME}.nacp
+    COMMAND nacptool --create ${APP_NAME} ${APP_AUTHOR_NAME} ${APP_VERSION} ${CMAKE_CURRENT_SOURCE_DIR}/${APP_NAME}.nacp
     COMMENT "Creating NACP file"
 )
 
 # Convert ELF to NRO
 add_custom_command(TARGET ${APP_NAME}.elf POST_BUILD
-    COMMAND elf2nro ${CMAKE_SOURCE_DIR}/${APP_NAME}.elf
-                    ${CMAKE_SOURCE_DIR}/${APP_NAME}.nro
-                    --nacp=${CMAKE_SOURCE_DIR}/${APP_NAME}.nacp
-                    --icon=${CMAKE_SOURCE_DIR}/icon.jpg
+    COMMAND elf2nro ${CMAKE_CURRENT_SOURCE_DIR}/${APP_NAME}.elf
+                    ${CMAKE_CURRENT_SOURCE_DIR}/${APP_NAME}.nro
+                    --nacp=${CMAKE_CURRENT_SOURCE_DIR}/${APP_NAME}.nacp
+                    --icon=${CMAKE_CURRENT_SOURCE_DIR}/icon.jpg
     COMMENT "Converting ELF to NRO"
 )
 
 # Set output directory for executables and other files
 set_target_properties(${APP_NAME}.elf PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
