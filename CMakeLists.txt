@@ -50,11 +50,12 @@ target_link_options(${APP_NAME}.elf PRIVATE
     -Wl,-Map,${APP_NAME}.map
 )
 
+add_subdirectory(lib)
+
 # Libraries to link against
 target_link_libraries(${APP_NAME}.elf
     nx
-    -L/opt/devkitpro/portlibs/switch/lib
-    -L/opt/devkitpro/libnx/lib
+    -L/opt/devkitpro/portlibs/switch/lib # thirdparty libraries ported with libnx
 )
 
 # Post-build steps
