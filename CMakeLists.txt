@@ -20,8 +20,6 @@ add_executable(${APP_NAME}.elf ${SOURCE_FILES})
 # Include directories
 target_include_directories(${APP_NAME}.elf PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    /opt/devkitpro/portlibs/switch/include
-    lib/libnx/nx/include
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -53,10 +51,7 @@ target_link_options(${APP_NAME}.elf PRIVATE
 add_subdirectory(lib)
 
 # Libraries to link against
-target_link_libraries(${APP_NAME}.elf
-    nx
-    -L/opt/devkitpro/portlibs/switch/lib # thirdparty libraries ported with libnx
-)
+target_link_libraries(${APP_NAME}.elf nx)
 
 # Post-build steps
 
