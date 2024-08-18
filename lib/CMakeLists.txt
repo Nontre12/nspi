@@ -8,21 +8,20 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(LIBNX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libnx/nx)
 
 # Path for the generated header file and temporary assembly file
-set(HEADER_FILE ${CMAKE_CURRENT_BINARY_DIR}/default_font.h)
 set(TMP_ASM_FILE ${CMAKE_CURRENT_BINARY_DIR}/default_font.bin.s)
 set(BINARY_FILE ${LIBNX_PATH}/data/default_font.bin)
 
 # Custom command to generate the header file from default_font.bin
 add_custom_command(
-    OUTPUT ${HEADER_FILE} ${TMP_ASM_FILE}
-    COMMAND bin2s -a 8 -H default_font_bin.h ${BINARY_FILE} > ${TMP_ASM_FILE}
+    OUTPUT ${TMP_ASM_FILE}
+    COMMAND ${CMAKE_COMMAND} -E env bin2s -a 8 -H default_font_bin.h ${BINARY_FILE} > ${TMP_ASM_FILE}
     DEPENDS ${BINARY_FILE}
     COMMENT "Generating header file default_font_bin.h from default_font.bin"
     VERBATIM
 )
 
 # Create a custom target to ensure the custom commands run before compilation
-add_custom_target(generate_default_font_header
+add_custom_target(generate_default_font_header ALL
     DEPENDS ${TMP_ASM_FILE}
 )
 
@@ -31,12 +30,10 @@ file(GLOB_RECURSE SOURCE_FILES
     ${LIBNX_PATH}/source/*.c
     ${LIBNX_PATH}/source/*.cpp
     ${LIBNX_PATH}/source/*.s
-    # Workarround for default_font.bin.s
-    ${TMP_ASM_FILE}
 )
 
 # Create the library
-add_library(nx ${SOURCE_FILES})
+add_library(nx ${SOURCE_FILES} ${TMP_ASM_FILE})
 
 add_dependencies(nx generate_default_font_header)
 
@@ -44,7 +41,6 @@ add_dependencies(nx generate_default_font_header)
 target_include_directories(nx PUBLIC
     ${LIBNX_PATH}/include
     ${LIBNX_PATH}/external/bsd/include
-    ${LIBNX_PATH}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
