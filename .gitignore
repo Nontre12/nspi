@@ -1,0 +1,9 @@
+# IDE
+.vscode/
+
+# Build
+build/
+
+*.elf
+*.nacp
+*.nro
