@@ -17,6 +17,8 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_console.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_pad.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_menu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_app.cpp
 )
 
 add_executable(${APP_NAME}.elf ${SOURCE_FILES})
