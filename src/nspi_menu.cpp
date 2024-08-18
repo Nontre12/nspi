@@ -3,15 +3,18 @@
 #include <iomanip>
 #include <iostream>
 
+#include "nspi_config.h"
+
 void nspi::Menu::printHeader() const {
-  std::cout << "NSPi Nintendo Switch v0.0.1                                            SoC: 0'C\n";
+  std::cout << APP_NAME << " Nintendo Switch v" << APP_VERSION
+            << "                                            SoC: 0'C\n";
   std::cout << "-------------------------------------------------------------------------------\n";
 }
 
 void nspi::Menu::printFooter() const {
   std::cout << "-------------------------------------------------------------------------------\n";
-  std::cout << "Count: " << this->dummyData.size()
-            << "\tNontre            A - install    Y - menu             Free: 5,00 MB\n";
+  std::cout << "Count: " << this->dummyData.size() << "\t" << APP_AUTHOR_NAME
+            << "            A - install    Y - menu             Free: 5,00 MB\n";
 }
 
 nspi::Menu::Menu(Pad& pad) : pad(pad) {

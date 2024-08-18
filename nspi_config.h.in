@@ -1,0 +1,8 @@
+#ifndef NSPI_CONFIG_H_
+#define NSPI_CONFIG_H_
+
+#cmakedefine APP_VERSION "@APP_VERSION@"
+#cmakedefine APP_NAME "@APP_NAME@"
+#cmakedefine APP_AUTHOR_NAME "@APP_AUTHOR_NAME@"
+
+#endif  // NSPI_CONFIG_H_

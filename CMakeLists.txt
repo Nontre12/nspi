@@ -12,6 +12,8 @@ set(APP_AUTHOR_NAME "Nontre")
 set(APP_NAME "NSPi")
 set(APP_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
+configure_file(nspi_config.h.in nspi_config.h @ONLY)
+
 # Define the target and its sources
 set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
