@@ -14,9 +14,12 @@ class App {
   Menu menu{pad};
 
   bool quit;
+  bool shouldClose() const;
 
   void mainLoop();
-  bool shouldClose() const;
+
+  void handleInput();
+  void draw();
 
  public:
   App();

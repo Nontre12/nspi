@@ -17,6 +17,12 @@ struct Title {
 
 class Menu {
  private:
+  uint16_t focusIndex = 0;
+  const uint8_t CONSOLE_WIDTH = 80;
+  const uint8_t CONSOLE_HEIGHT = 44;
+  const uint8_t HEADER_HEIGHT = 2;
+  const uint8_t FOOTER_HEIGHT = 2;
+
   Pad& pad;
   std::vector<Title> dummyData;
 
@@ -31,7 +37,7 @@ class Menu {
   Menu& operator=(const Menu&) = delete;
 
   void handleInput();
-  void print() const;
+  void draw();
 };
 
 }  // namespace nspi
