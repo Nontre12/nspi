@@ -2,8 +2,8 @@
 #define NSPI_MENU_H_
 
 #include <cstdint>
-#include <vector>
 #include <set>
+#include <vector>
 
 #include "nspi_pad.h"
 
@@ -22,6 +22,7 @@ class Menu {
   static constexpr uint8_t CONSOLE_HEIGHT = 44;
   static constexpr uint8_t HEADER_HEIGHT = 2;
   static constexpr uint8_t FOOTER_HEIGHT = 2;
+  static constexpr uint8_t visibleItems = CONSOLE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
 
   uint16_t focusIndex;
   uint16_t focusOffset;
@@ -32,6 +33,7 @@ class Menu {
   std::set<uint16_t> marked;
 
   void printHeader() const;
+  void printContent() const;
   void printFooter() const;
   void focusPrevious();
   void focusNext();

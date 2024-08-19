@@ -17,6 +17,43 @@ void nspi::Menu::printFooter() const {
             << "            A - install    Y - menu             Free: 5,00 MB\n";
 }
 
+void nspi::Menu::printContent() const {
+  size_t printedItems = 0;
+  for (size_t i = focusOffset; i < dummyData.size(); i++) {
+    if (printedItems >= visibleItems) break;
+
+    if (i == this->focusIndex) {
+      std::cout << "\033[1;41m";  // Highlight focused item
+    } else if (this->marked.find(i) != this->marked.end()) {
+      std::cout << "\033[1;43m";  // Highlight marked item
+    }
+
+    std::cout << dummyData[i].id << "  ";
+    std::cout << dummyData[i].region << "  ";
+
+    std::string name = dummyData[i].name;
+    if (name.length() > 40) {
+      name = name.substr(0, 37) + "...";
+    }
+
+    std::cout << std::setw(44) << std::left << name;
+    std::cout << std::setw(8) << std::right << dummyData[i].size << " MB";
+
+    if (i == this->focusIndex) {
+    }
+    std::cout << "\033[0m";  // Reset highlight
+
+    std::cout << std::endl;
+    printedItems++;
+  }
+
+  // Padding for empty rows
+  while (printedItems < visibleItems) {
+    std::cout << std::endl;
+    printedItems++;
+  }
+}
+
 nspi::Menu::Menu(Pad& pad) : focusIndex(38), focusOffset(0), pad(pad) {
   this->dummyData = {
       {"70010000000025", "EUR", "The Legend of Zelda: Breath of the Wild", 14300},
@@ -103,11 +140,7 @@ nspi::Menu::Menu(Pad& pad) : focusIndex(38), focusOffset(0), pad(pad) {
 void nspi::Menu::handleInput() {
   u64 kDown = this->pad.getButtonsDown();
   HidAnalogStickState left_stick_state = this->pad.getStickPos(0);
-  //HidAnalogStickState right_stick_state = this->pad.getStickPos(1);
-
-  if (kDown & HidNpadButton_A) {
-    this->dummyData.push_back({"70010000009762", "EUR", "Astral Chain", 10000});
-  }
+  // HidAnalogStickState right_stick_state = this->pad.getStickPos(1);
 
   if (kDown & HidNpadButton_Up || left_stick_state.y > 30000) {
     this->focusPrevious();
@@ -129,12 +162,23 @@ void nspi::Menu::handleInput() {
     }
   }
 
+  if (kDown & HidNpadButton_A) {
+    this->dummyData.push_back({"70010000009762", "EUR", "Astral Chain", 10000});
+  }
+
   if (kDown & HidNpadButton_X) {
     if (this->marked.find(focusIndex) == this->marked.end()) {
       this->marked.insert(focusIndex);
     } else {
       this->marked.erase(focusIndex);
     }
+  }
+
+  // Adjust focusOffset if necessary
+  if (focusIndex < focusOffset) {
+    focusOffset = focusIndex;
+  } else if (focusIndex >= focusOffset + visibleItems) {
+    focusOffset = focusIndex - visibleItems + 1;
   }
 }
 
@@ -152,51 +196,6 @@ void nspi::Menu::focusNext() {
 
 void nspi::Menu::draw() {
   this->printHeader();
-
-  size_t visibleItems = CONSOLE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
-
-  // Adjust focusOffset if necessary
-  if (focusIndex < focusOffset) {
-    focusOffset = focusIndex;
-  } else if (focusIndex >= focusOffset + visibleItems) {
-    focusOffset = focusIndex - visibleItems + 1;
-  }
-
-  // Loop through the visible items
-  size_t printedItems = 0;
-  for (size_t i = focusOffset; i < dummyData.size(); i++) {
-    if (printedItems >= visibleItems) break;
-
-    if (i == this->focusIndex) {
-      std::cout << "\033[1;41m";  // Highlight focused item
-    } else if (this->marked.find(i) != this->marked.end()) {
-      std::cout << "\033[1;43m";  // Highlight marked item
-    }
-
-    std::cout << dummyData[i].id << "  ";
-    std::cout << dummyData[i].region << "  ";
-
-    std::string name = dummyData[i].name;
-    if (name.length() > 40) {
-      name = name.substr(0, 37) + "...";
-    }
-
-    std::cout << std::setw(44) << std::left << name;
-    std::cout << std::setw(8) << std::right << dummyData[i].size << " MB";
-
-    if (i == this->focusIndex) {
-    }
-    std::cout << "\033[0m";  // Reset highlight
-
-    std::cout << std::endl;
-    printedItems++;
-  }
-
-  // Padding for empty rows
-  while (printedItems < visibleItems) {
-    std::cout << std::endl;
-    printedItems++;
-  }
-
+  this->printContent();
   this->printFooter();
 }
