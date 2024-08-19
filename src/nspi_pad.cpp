@@ -9,8 +9,8 @@ void nspi::Pad::update() { padUpdate(&this->pad); }
 
 u64 nspi::Pad::getButtonsDown() const { return padGetButtonsDown(&this->pad); }
 
-HidAnalogStickState nspi::Pad::getStickPos() const {
-  return padGetStickPos(&this->pad, 0);
+HidAnalogStickState nspi::Pad::getStickPos(const uint8_t &id) const {
+  return padGetStickPos(&this->pad, id);
 }
 
 void nspi::Pad::init() {
