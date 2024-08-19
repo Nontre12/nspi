@@ -5,8 +5,6 @@
 
 nspi::Pad::Pad() { this->init(); }
 
-nspi::Pad::~Pad() {}
-
 void nspi::Pad::update() { padUpdate(&this->pad); }
 
 u64 nspi::Pad::getButtonsDown() const { return padGetButtonsDown(&this->pad); }
