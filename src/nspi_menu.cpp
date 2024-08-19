@@ -115,6 +115,14 @@ void nspi::Menu::handleInput() {
   if (kDown & HidNpadButton_Down || left_stick_state.y < 0) {
     this->focusNext();
   }
+
+  if (kDown & HidNpadButton_X) {
+    if (this->marked.find(focusIndex) == this->marked.end()) {
+      this->marked.insert(focusIndex);
+    } else {
+      this->marked.erase(focusIndex);
+    }
+  }
 }
 
 void nspi::Menu::focusPrevious() {
@@ -147,7 +155,9 @@ void nspi::Menu::draw() {
     if (printedItems >= visibleItems) break;
 
     if (i == this->focusIndex) {
-      std::cout << "\033[1;41m";  // Highlight the focused item
+      std::cout << "\033[1;41m";  // Highlight focused item
+    } else if (this->marked.find(i) != this->marked.end()) {
+      std::cout << "\033[1;43m";  // Highlight marked item
     }
 
     std::cout << dummyData[i].id << "  ";
@@ -162,8 +172,8 @@ void nspi::Menu::draw() {
     std::cout << std::setw(8) << std::right << dummyData[i].size << " MB";
 
     if (i == this->focusIndex) {
-      std::cout << "\033[0m";  // Reset highlight
     }
+    std::cout << "\033[0m";  // Reset highlight
 
     std::cout << std::endl;
     printedItems++;

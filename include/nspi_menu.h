@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <set>
 
 #include "nspi_pad.h"
 
@@ -27,6 +28,8 @@ class Menu {
 
   Pad& pad;
   std::vector<Title> dummyData;
+
+  std::set<uint16_t> marked;
 
   void printHeader() const;
   void printFooter() const;
