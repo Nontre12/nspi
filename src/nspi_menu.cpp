@@ -102,18 +102,31 @@ nspi::Menu::Menu(Pad& pad) : focusIndex(38), focusOffset(0), pad(pad) {
 
 void nspi::Menu::handleInput() {
   u64 kDown = this->pad.getButtonsDown();
-  HidAnalogStickState left_stick_state = this->pad.getStickPos();
+  HidAnalogStickState left_stick_state = this->pad.getStickPos(0);
+  //HidAnalogStickState right_stick_state = this->pad.getStickPos(1);
 
   if (kDown & HidNpadButton_A) {
     this->dummyData.push_back({"70010000009762", "EUR", "Astral Chain", 10000});
   }
 
-  if (kDown & HidNpadButton_Up || left_stick_state.y > 0) {
+  if (kDown & HidNpadButton_Up || left_stick_state.y > 30000) {
     this->focusPrevious();
   }
 
-  if (kDown & HidNpadButton_Down || left_stick_state.y < 0) {
+  if (kDown & HidNpadButton_Down || left_stick_state.y < -30000) {
     this->focusNext();
+  }
+
+  if (kDown & HidNpadButton_Left || left_stick_state.x < -30000) {
+    for (uint8_t i = 0; i < 5; i++) {
+      this->focusPrevious();
+    }
+  }
+
+  if (kDown & HidNpadButton_Right || left_stick_state.x > 30000) {
+    for (uint8_t i = 0; i < 5; i++) {
+      this->focusNext();
+    }
   }
 
   if (kDown & HidNpadButton_X) {
