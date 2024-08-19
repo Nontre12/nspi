@@ -17,24 +17,25 @@ struct Title {
 
 class Menu {
  private:
-  uint16_t focusIndex = 38;
-  const uint8_t CONSOLE_WIDTH = 80;
-  const uint8_t CONSOLE_HEIGHT = 44;
-  const uint8_t HEADER_HEIGHT = 2;
-  const uint8_t FOOTER_HEIGHT = 2;
+  static constexpr uint8_t CONSOLE_WIDTH = 80;
+  static constexpr uint8_t CONSOLE_HEIGHT = 44;
+  static constexpr uint8_t HEADER_HEIGHT = 2;
+  static constexpr uint8_t FOOTER_HEIGHT = 2;
+
+  uint16_t focusIndex;
+  uint16_t focusOffset;
 
   Pad& pad;
   std::vector<Title> dummyData;
 
   void printHeader() const;
   void printFooter() const;
-
   void focusPrevious();
   void focusNext();
 
  public:
-  Menu(Pad&);
-  ~Menu();
+  explicit Menu(Pad&);
+  ~Menu() = default;
 
   Menu(const Menu&) = delete;
   Menu& operator=(const Menu&) = delete;

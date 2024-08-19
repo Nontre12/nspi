@@ -12,7 +12,7 @@ class Pad {
 
  public:
   Pad();
-  ~Pad();
+  ~Pad() = default;
 
   Pad(const Pad&) = delete;
   Pad& operator=(const Pad&) = delete;
