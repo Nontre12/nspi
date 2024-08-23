@@ -33,13 +33,15 @@ void nspi::Menu::printContent() const {
       name = name.substr(0, 37) + "...";
     }
 
+    // clang-format off
     std::cout << std::setw(4) << std::left << dummyData[i].id << "  "
               << std::setw(4) << std::left << dummyData[i].region << "  "
               << std::setw(44) << std::left << name
               << std::setw(8) << std::right << dummyData[i].size << " MB"
               << "\033[0m" << std::endl;
+        // clang-format on
 
-    printedItems++;
+        printedItems++;
   }
 
   // Padding for empty rows
@@ -146,15 +148,11 @@ void nspi::Menu::handleInput() {
   }
 
   if (kDown & HidNpadButton_Left || left_stick_state.x < -30000) {
-    for (uint8_t i = 0; i < 5; i++) {
-      this->focusPrevious();
-    }
+    this->focusPrevious(5);
   }
 
   if (kDown & HidNpadButton_Right || left_stick_state.x > 30000) {
-    for (uint8_t i = 0; i < 5; i++) {
-      this->focusNext();
-    }
+    this->focusNext(5);
   }
 
   if (kDown & HidNpadButton_A) {
@@ -177,19 +175,27 @@ void nspi::Menu::handleInput() {
   }
 }
 
-void nspi::Menu::focusPrevious() {
+void nspi::Menu::focusPrevious(uint16_t steps) {
+  if (this->focusIndex < steps) {
+    this->focusIndex = 0;
+  }
+
   if (this->focusIndex != 0) {
-    this->focusIndex--;
+    this->focusIndex -= steps;
   }
 }
 
-void nspi::Menu::focusNext() {
+void nspi::Menu::focusNext(uint16_t steps) {
+  if (this->focusIndex + steps > this->dummyData.size()) {
+    this->focusIndex = this->dummyData.size() - 1;
+  }
+
   if (this->focusIndex < this->dummyData.size() - 1) {
-    this->focusIndex++;
+    this->focusIndex += steps;
   }
 }
 
-void nspi::Menu::draw() {
+void nspi::Menu::draw() const {
   this->printHeader();
   this->printContent();
   this->printFooter();
