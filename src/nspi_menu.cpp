@@ -28,22 +28,17 @@ void nspi::Menu::printContent() const {
       std::cout << "\033[1;43m";  // Highlight marked item
     }
 
-    std::cout << dummyData[i].id << "  ";
-    std::cout << dummyData[i].region << "  ";
-
     std::string name = dummyData[i].name;
     if (name.length() > 40) {
       name = name.substr(0, 37) + "...";
     }
 
-    std::cout << std::setw(44) << std::left << name;
-    std::cout << std::setw(8) << std::right << dummyData[i].size << " MB";
+    std::cout << std::setw(4) << std::left << dummyData[i].id << "  "
+              << std::setw(4) << std::left << dummyData[i].region << "  "
+              << std::setw(44) << std::left << name
+              << std::setw(8) << std::right << dummyData[i].size << " MB"
+              << "\033[0m" << std::endl;
 
-    if (i == this->focusIndex) {
-    }
-    std::cout << "\033[0m";  // Reset highlight
-
-    std::cout << std::endl;
     printedItems++;
   }
 
