@@ -35,8 +35,15 @@ class Menu {
   void printHeader() const;
   void printContent() const;
   void printFooter() const;
-  void focusPrevious();
-  void focusNext();
+
+  /**
+   * @param steps Amount of steps. Default 1
+   */
+  void focusPrevious(uint16_t steps = 1);
+  /**
+   * @param steps Amount of steps. Default 1
+   */
+  void focusNext(uint16_t steps = 1);
 
  public:
   explicit Menu(Pad&);
@@ -46,7 +53,7 @@ class Menu {
   Menu& operator=(const Menu&) = delete;
 
   void handleInput();
-  void draw();
+  void draw() const;
 };
 
 }  // namespace nspi
