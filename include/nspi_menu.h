@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <set>
 #include <vector>
-#include <string>
 
 #include "nspi_pad.h"
 
@@ -55,6 +54,8 @@ class Menu {
 
   void handleInput();
   void draw() const;
+
+  void addEntries(const std::vector<nspi::Title>& titles);
 };
 
 }  // namespace nspi

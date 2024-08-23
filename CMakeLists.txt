@@ -29,6 +29,7 @@ add_executable(${APP_NAME}.elf ${SOURCE_FILES})
 target_include_directories(${APP_NAME}.elf PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}
+    /opt/devkitpro/portlibs/switch/include
 )
 
 # Compilation flags
@@ -42,7 +43,8 @@ target_compile_options(${APP_NAME}.elf PRIVATE
     -mtp=soft
     -fPIE
     -D__SWITCH__
-    -fno-exceptions
+    #-fno-exceptions
+    -DCURL_STATICLIB # curl-config --cflags
 )
 
 # Linker flags
@@ -57,9 +59,15 @@ target_link_options(${APP_NAME}.elf PRIVATE
 )
 
 add_subdirectory(lib)
+add_subdirectory(lib/json)
 
 # Libraries to link against
-target_link_libraries(${APP_NAME}.elf nx)
+target_link_libraries(${APP_NAME}.elf nx nlohmann_json)
+
+target_link_directories(${APP_NAME}.elf PRIVATE /opt/devkitpro/portlibs/switch/lib)
+target_link_libraries(${APP_NAME}.elf
+    curl z # curl-config --libs
+    ${CMAKE_CURRENT_BINARY_DIR}/lib/libnx.a)
 
 # Post-build steps
 

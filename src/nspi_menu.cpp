@@ -13,8 +13,8 @@ void nspi::Menu::printHeader() const {
 
 void nspi::Menu::printFooter() const {
   std::cout << "-------------------------------------------------------------------------------\n";
-  std::cout << "Count: " << this->dummyData.size() << "\t" << APP_AUTHOR_NAME
-            << "            A - install    Y - menu             Free: 5,00 MB\n";
+  std::cout << "(" << focusIndex + 1 << "/" << this->dummyData.size() << ")" << APP_AUTHOR_NAME
+            << "            A - install  Y - menu             " << std::right << "Free: 5,00 MB\n";
 }
 
 void nspi::Menu::printContent() const {
@@ -155,10 +155,6 @@ void nspi::Menu::handleInput() {
     this->focusNext(5);
   }
 
-  if (kDown & HidNpadButton_A) {
-    this->dummyData.push_back({"70010000009762", "EUR", "Astral Chain", 10000});
-  }
-
   if (kDown & HidNpadButton_X) {
     if (this->marked.find(focusIndex) == this->marked.end()) {
       this->marked.insert(focusIndex);
@@ -200,3 +196,5 @@ void nspi::Menu::draw() const {
   this->printContent();
   this->printFooter();
 }
+
+void nspi::Menu::addEntries(const std::vector<nspi::Title>& titles) { this->dummyData = titles; }
