@@ -16,6 +16,9 @@ class App {
   bool quit;
   bool shouldClose() const;
 
+  void init();
+  void clean();
+
   void mainLoop();
 
   void handleInput();

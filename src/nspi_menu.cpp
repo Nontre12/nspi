@@ -20,7 +20,7 @@ void nspi::Menu::printFooter() const {
 void nspi::Menu::printContent() const {
   size_t printedItems = 0;
   for (size_t i = focusOffset; i < dummyData.size(); i++) {
-    if (printedItems >= visibleItems) break;
+    if (printedItems >= VISIBLE_ITEMS) break;
 
     if (i == this->focusIndex) {
       std::cout << "\033[1;41m";  // Highlight focused item
@@ -39,19 +39,19 @@ void nspi::Menu::printContent() const {
               << std::setw(44) << std::left << name
               << std::setw(8) << std::right << dummyData[i].size << " MB"
               << "\033[0m" << std::endl;
-        // clang-format on
+    // clang-format on
 
-        printedItems++;
+    printedItems++;
   }
 
   // Padding for empty rows
-  while (printedItems < visibleItems) {
+  while (printedItems < VISIBLE_ITEMS) {
     std::cout << std::endl;
     printedItems++;
   }
 }
 
-nspi::Menu::Menu(Pad& pad) : focusIndex(38), focusOffset(0), pad(pad) {
+nspi::Menu::Menu(Pad& pad) : focusIndex(0), focusOffset(0), pad(pad) {
   this->dummyData = {
       {"70010000000025", "EUR", "The Legend of Zelda: Breath of the Wild", 14300},
       {"70010000000031", "EUR", "Super Mario Odyssey", 5820},
@@ -170,8 +170,8 @@ void nspi::Menu::handleInput() {
   // Adjust focusOffset if necessary
   if (focusIndex < focusOffset) {
     focusOffset = focusIndex;
-  } else if (focusIndex >= focusOffset + visibleItems) {
-    focusOffset = focusIndex - visibleItems + 1;
+  } else if (focusIndex >= focusOffset + VISIBLE_ITEMS) {
+    focusOffset = focusIndex - VISIBLE_ITEMS + 1;
   }
 }
 

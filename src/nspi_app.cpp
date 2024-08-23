@@ -1,8 +1,12 @@
 #include "nspi_app.h"
 
-nspi::App::App() : quit(false) {}
+nspi::App::App() : quit(false) { this->init(); }
 
-nspi::App::~App() {}
+nspi::App::~App() { this->clean(); }
+
+void nspi::App::init() { socketInitializeDefault(); }
+
+void nspi::App::clean() { socketExit(); }
 
 bool nspi::App::shouldClose() const { return this->quit || !appletMainLoop(); }
 
