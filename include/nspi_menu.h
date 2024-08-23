@@ -10,10 +10,14 @@
 namespace nspi {
 
 struct Title {
-  char id[17];
-  char region[4];
-  char name[50];
-  uint16_t size;
+  uint32_t releaseDate;    // 4 bytes
+  uint32_t size;           // 4 bytes
+  char region[3];          // 3 bytes
+  char id[17];             // 17 bytes
+  char publisher[25];      // 25 bytes
+  char name[49];           // 49 bytes
+  char version[49];        // 49 bytes
+  char description[1025];  // 1025 bytes
 };
 
 class Menu {

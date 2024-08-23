@@ -81,9 +81,12 @@ std::vector<nspi::Title> nspi::App::retrieveTitlesFromRawData(const std::string&
         // Initialize the struct with default values
         std::memset(&title, 0, sizeof(Title));
 
-        // Fill the struct fields
-        if (value.contains("id") && value["id"].is_string()) {
-          copyStringToCharArray(value["id"].get<std::string>(), title.id, sizeof(title.id));
+        if (value.contains("releaseDate") && value["releaseDate"].is_number_integer()) {
+          title.releaseDate = static_cast<uint32_t>(value["releaseDate"].get<uint32_t>());
+        }
+
+        if (value.contains("size") && value["size"].is_number_integer()) {
+          title.size = static_cast<uint32_t>(value["size"].get<uint32_t>());
         }
 
         if (value.contains("region") && value["region"].is_string()) {
@@ -93,13 +96,33 @@ std::vector<nspi::Title> nspi::App::retrieveTitlesFromRawData(const std::string&
               sizeof(title.region));
         }
 
+        if (value.contains("id") && value["id"].is_string()) {
+          copyStringToCharArray(value["id"].get<std::string>(), title.id, sizeof(title.id));
+        }
+
+        if (value.contains("publisher") && value["publisher"].is_string()) {
+          copyStringToCharArray(
+              value["publisher"].get<std::string>(),
+              title.publisher,
+              sizeof(title.publisher));
+        }
+
         if (value.contains("name") && value["name"].is_string()) {
           copyStringToCharArray(value["name"].get<std::string>(), title.name, sizeof(title.name));
         }
 
-        if (value.contains("size") && value["size"].is_number_integer()) {
-          title.size =
-              static_cast<uint16_t>(value["size"].get<uint64_t>());  // Ensure size fits in uint16_t
+        if (value.contains("version") && value["version"].is_string()) {
+          copyStringToCharArray(
+              value["version"].get<std::string>(),
+              title.version,
+              sizeof(title.version));
+        }
+
+        if (value.contains("description") && value["description"].is_string()) {
+          copyStringToCharArray(
+              value["description"].get<std::string>(),
+              title.description,
+              sizeof(title.description));
         }
 
         titles.push_back(title);
