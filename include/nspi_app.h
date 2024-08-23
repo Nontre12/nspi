@@ -1,6 +1,8 @@
 #ifndef NSPI_APP_H_
 #define NSPI_APP_H_
 
+#include <string>
+
 #include "nspi_console.h"
 #include "nspi_menu.h"
 #include "nspi_pad.h"
@@ -23,6 +25,9 @@ class App {
 
   void handleInput();
   void draw();
+
+  std::string retrieveRawDataFromEndpoint() const;
+  std::vector<nspi::Title> retrieveTitlesFromRawData(const std::string& rawData) const;
 
  public:
   App();
