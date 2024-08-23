@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <set>
 #include <vector>
+#include <string>
 
 #include "nspi_pad.h"
 
@@ -22,7 +23,7 @@ class Menu {
   static constexpr uint8_t CONSOLE_HEIGHT = 44;
   static constexpr uint8_t HEADER_HEIGHT = 2;
   static constexpr uint8_t FOOTER_HEIGHT = 2;
-  static constexpr uint8_t visibleItems = CONSOLE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
+  static constexpr uint8_t VISIBLE_ITEMS = CONSOLE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
 
   uint16_t focusIndex;
   uint16_t focusOffset;

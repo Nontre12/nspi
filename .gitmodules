@@ -4,3 +4,9 @@
 [submodule "tools/switch-tools"]
 	path = tools/switch-tools
 	url = https://github.com/switchbrew/switch-tools.git
+[submodule "lib/curl"]
+	path = lib/curl
+	url = https://github.com/curl/curl
+[submodule "lib/json"]
+	path = lib/json
+	url = https://github.com/nlohmann/json
