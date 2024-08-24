@@ -96,7 +96,7 @@ void nspi::TitleSelectorMenu::handleInput() {
   static bool contentLoaded = false;
   if (kDown & HidNpadButton_Minus && !contentLoaded) {
     std::vector<nspi::Title> titles =
-        this->fetchTitles("https://raw.githubusercontent.com/ghost-land/NX-DB/main/fulldb.json");
+        this->fetchTitles("https://raw.githubusercontent.com/blawar/titledb/master/ES.es.json");
 
     this->dummyData = titles;
 
@@ -148,10 +148,16 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::stri
   return totalSize;
 }
 
-// Helper function to safely copy strings into fixed-size char arrays
-static void copyStringToCharArray(const std::string& source, char* destination, size_t maxSize) {
-  strncpy(destination, source.c_str(), maxSize - 1);
-  destination[maxSize - 1] = '\0';  // Ensure null termination
+static void copyStringToCharArray(const std::string& source, char* destination, size_t size) {
+  strncpy(destination, source.c_str(), size - 1);
+  destination[size - 1] = '\0';  // Ensure null termination
+}
+
+static void populateTitleField(
+    const nlohmann::json& value, const std::string& field, char* destination, size_t size) {
+  if (value.contains(field) && value[field].is_string()) {
+    copyStringToCharArray(value[field].get<std::string>(), destination, size);
+  }
 }
 
 std::string nspi::TitleSelectorMenu::retrieveRawDataFromEndpoint(
@@ -191,81 +197,43 @@ std::string nspi::TitleSelectorMenu::retrieveRawDataFromEndpoint(
 
 std::vector<nspi::Title> nspi::TitleSelectorMenu::retrieveTitlesFromRawData(
     const std::string& rawData) const {
-  std::vector<nspi::Title> titles;
+  std::vector<Title> titles;
 
-  nlohmann::json jsonData = nlohmann::json::value_t::discarded;
-  nlohmann::json parseResult = nlohmann::json::parse(rawData, nullptr, false);
-
-  // Check if the parsing was successful
-  if (!parseResult.is_discarded()) {
-    jsonData = parseResult;
-  } else {
+  nlohmann::json jsonData = nlohmann::json::parse(rawData, nullptr, false);
+  if (jsonData.is_discarded()) {
     std::cerr << "Failed to parse raw data into JSON.\n";
     return titles;
   }
 
-  if (jsonData.contains("titledb") && jsonData["titledb"].is_object()) {
-    nlohmann::json titledb = jsonData["titledb"];
-    int count = 0;
+  const nlohmann::json& titledb = jsonData;
+  int count = 0;
 
-    for (auto it = titledb.begin(); it != titledb.end(); ++it) {
-      if (count >= 20000) break;  // Limit amount of entries available
+  for (auto it = titledb.begin(); it != titledb.end(); ++it) {
+    if (count >= 60000) break;  // Limit amount of entries available
 
-      const nlohmann::json& value = it.value();
-      Title title;
+    const nlohmann::json& value = it.value();
+    const std::string key = it.key();
 
-      // Initialize the struct with default values
-      std::memset(&title, 0, sizeof(Title));
+    Title title;
+    std::memset(&title, 0, sizeof(Title));
 
-      if (value.contains("releaseDate") && value["releaseDate"].is_number_integer()) {
-        title.releaseDate = static_cast<uint32_t>(value["releaseDate"].get<uint32_t>());
-      }
-
-      if (value.contains("size") && value["size"].is_number_integer()) {
-        title.size = static_cast<uint32_t>(value["size"].get<uint32_t>());
-      }
-
-      if (value.contains("region") && value["region"].is_string()) {
-        copyStringToCharArray(
-            value["region"].get<std::string>(),
-            title.region,
-            sizeof(title.region));
-      }
-
-      if (value.contains("id") && value["id"].is_string()) {
-        copyStringToCharArray(value["id"].get<std::string>(), title.id, sizeof(title.id));
-      }
-
-      if (value.contains("publisher") && value["publisher"].is_string()) {
-        copyStringToCharArray(
-            value["publisher"].get<std::string>(),
-            title.publisher,
-            sizeof(title.publisher));
-      }
-
-      if (value.contains("name") && value["name"].is_string()) {
-        copyStringToCharArray(value["name"].get<std::string>(), title.name, sizeof(title.name));
-      }
-
-      if (value.contains("version") && value["version"].is_string()) {
-        copyStringToCharArray(
-            value["version"].get<std::string>(),
-            title.version,
-            sizeof(title.version));
-      }
-
-      if (value.contains("description") && value["description"].is_string()) {
-        copyStringToCharArray(
-            value["description"].get<std::string>(),
-            title.description,
-            sizeof(title.description));
-      }
-
-      titles.push_back(title);
-      ++count;
+    if (value.contains("releaseDate") && value["releaseDate"].is_number_integer()) {
+      title.releaseDate = value["releaseDate"].get<uint32_t>();
     }
-  } else {
-    std::cerr << "'titledb' not found or is not an object\n";
+
+    if (value.contains("size") && value["size"].is_number_integer()) {
+      title.size = value["size"].get<uint32_t>();
+    }
+
+    copyStringToCharArray(key, title.id, sizeof(title.id));
+    populateTitleField(value, "region", title.region, sizeof(title.region));
+    populateTitleField(value, "publisher", title.publisher, sizeof(title.publisher));
+    populateTitleField(value, "name", title.name, sizeof(title.name));
+    populateTitleField(value, "version", title.version, sizeof(title.version));
+    populateTitleField(value, "description", title.description, sizeof(title.description));
+
+    titles.push_back(title);
+    ++count;
   }
 
   return titles;
