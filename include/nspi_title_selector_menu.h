@@ -6,7 +6,9 @@
 #include <string>
 #include <vector>
 
+#include "nspi_app.h"
 #include "nspi_menu.h"
+#include "nspi_menu_manager.h"
 #include "nspi_pad.h"
 #include "nspi_title.h"
 
@@ -14,16 +16,11 @@ namespace nspi {
 
 class TitleSelectorMenu : public Menu {
  private:
-  static constexpr uint8_t CONSOLE_WIDTH = 80;
-  static constexpr uint8_t CONSOLE_HEIGHT = 44;
-  static constexpr uint8_t HEADER_HEIGHT = 2;
-  static constexpr uint8_t FOOTER_HEIGHT = 2;
-  static constexpr uint8_t VISIBLE_ITEMS = CONSOLE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
-
   uint16_t focusIndex;
   uint16_t focusOffset;
   std::set<uint16_t> marked;
 
+  MenuManager& menuManager;
   Pad& pad;
   std::vector<Title> dummyData;
 
@@ -45,7 +42,7 @@ class TitleSelectorMenu : public Menu {
   std::vector<nspi::Title> fetchTitles(const std::string& endpoint) const;
 
  public:
-  explicit TitleSelectorMenu(Pad&);
+  explicit TitleSelectorMenu(MenuManager&, Pad&);
   ~TitleSelectorMenu() = default;
 
   TitleSelectorMenu(const TitleSelectorMenu&) = delete;

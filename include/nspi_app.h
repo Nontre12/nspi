@@ -1,10 +1,9 @@
 #ifndef NSPI_APP_H_
 #define NSPI_APP_H_
 
-#include <stack>
-
 #include "nspi_console.h"
 #include "nspi_menu.h"
+#include "nspi_menu_manager.h"
 #include "nspi_pad.h"
 
 namespace nspi {
@@ -13,7 +12,7 @@ class App {
  private:
   Console console;
   Pad pad;
-  std::stack<nspi::Menu*> menu;
+  MenuManager menuManager{pad};
 
   bool quit;
   bool shouldClose() const;

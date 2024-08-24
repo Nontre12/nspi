@@ -1,5 +1,7 @@
 #include "nspi_title_selector_menu.h"
 
+#include "nspi_title_menu.h"
+
 // external
 #include <curl/curl.h>
 
@@ -57,7 +59,7 @@ void nspi::TitleSelectorMenu::printContent() const {
     std::cout << std::setw(17) << std::left << dummyData[i].id
               << std::setw(3) << std::left << dummyData[i].region
               << std::setw(40) << std::left << name
-              << std::setw(16) << std::right << dummyData[i].size << " MB"
+              << std::setw(16) << std::right << dummyData[i].size << " B"
               << "\033[0m" << std::endl;
     // clang-format on
 
@@ -71,7 +73,8 @@ void nspi::TitleSelectorMenu::printContent() const {
   }
 }
 
-nspi::TitleSelectorMenu::TitleSelectorMenu(Pad& pad) : focusIndex(0), focusOffset(0), pad(pad) {}
+nspi::TitleSelectorMenu::TitleSelectorMenu(MenuManager& menuManager, Pad& pad)
+    : focusIndex(0), focusOffset(0), menuManager(menuManager), pad(pad) {}
 
 void nspi::TitleSelectorMenu::handleInput() {
   u64 kDown = this->pad.getButtonsDown();
@@ -110,6 +113,12 @@ void nspi::TitleSelectorMenu::handleInput() {
     this->dummyData = titles;
 
     contentLoaded = true;
+  }
+
+  if (kDown & HidNpadButton_Y) {
+    if (!dummyData.empty()) {
+      this->menuManager.enter(new TitleMenu(menuManager, pad, dummyData[focusIndex]));
+    }
   }
 
   // Adjust focusOffset if necessary
@@ -163,7 +172,8 @@ static void copyStringToCharArray(const std::string& source, char* destination, 
   destination[maxSize - 1] = '\0';  // Ensure null termination
 }
 
-std::string nspi::TitleSelectorMenu::retrieveRawDataFromEndpoint(const std::string& endpoint) const {
+std::string nspi::TitleSelectorMenu::retrieveRawDataFromEndpoint(
+    const std::string& endpoint) const {
   CURL* curl;
   CURLcode res;
   std::string responseBody = "";
