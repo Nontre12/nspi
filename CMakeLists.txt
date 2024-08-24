@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name and version
-project(NSPi VERSION 0.0.1 LANGUAGES C CXX)
+project(NSPi VERSION 0.0.2 LANGUAGES C CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 14)
@@ -21,7 +21,9 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_console.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_pad.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_menu_manager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_title_selector_menu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_title_menu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_app.cpp
 )
 
