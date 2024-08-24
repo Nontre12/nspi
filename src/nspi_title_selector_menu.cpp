@@ -11,18 +11,6 @@
 #include <iomanip>
 #include <iostream>
 
-#include "nspi_config.h"
-
-void nspi::TitleSelectorMenu::printHeader() const {
-  std::stringstream app_info;
-  app_info << APP_NAME << " Nintendo Switch v" << APP_VERSION << " by " << APP_AUTHOR_NAME;
-
-  uint8_t remaining_width = CONSOLE_WIDTH - app_info.str().length();
-
-  std::cout << app_info.str() << std::setw(remaining_width) << std::right << "SoC: 0'C\n";
-  std::cout << "-------------------------------------------------------------------------------\n";
-}
-
 void nspi::TitleSelectorMenu::printFooter() const {
   uint16_t printableFocusIndex = 0;
   if (this->dummyData.size() != 0) {
@@ -152,12 +140,6 @@ void nspi::TitleSelectorMenu::focusNext(uint16_t steps) {
   if (this->focusIndex < this->dummyData.size() - 1) {
     this->focusIndex += steps;
   }
-}
-
-void nspi::TitleSelectorMenu::draw() const {
-  this->printHeader();
-  this->printContent();
-  this->printFooter();
 }
 
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* userp) {

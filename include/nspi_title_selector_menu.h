@@ -24,7 +24,6 @@ class TitleSelectorMenu : public Menu {
   Pad& pad;
   std::vector<Title> dummyData;
 
-  void printHeader() const;
   void printContent() const;
   void printFooter() const;
 
@@ -49,7 +48,6 @@ class TitleSelectorMenu : public Menu {
   TitleSelectorMenu& operator=(const TitleSelectorMenu&) = delete;
 
   void handleInput();
-  void draw() const;
 };
 
 }  // namespace nspi
