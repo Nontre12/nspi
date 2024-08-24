@@ -26,8 +26,10 @@ class App {
   void handleInput();
   void draw();
 
-  std::string retrieveRawDataFromEndpoint() const;
+  std::string retrieveRawDataFromEndpoint(const std::string& endpoint) const;
   std::vector<nspi::Title> retrieveTitlesFromRawData(const std::string& rawData) const;
+
+  std::vector<nspi::Title> fetchTitles(const std::string& endpoint) const;
 
  public:
   App();
