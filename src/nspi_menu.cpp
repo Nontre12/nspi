@@ -6,15 +6,29 @@
 #include "nspi_config.h"
 
 void nspi::Menu::printHeader() const {
-  std::cout << APP_NAME << " Nintendo Switch v" << APP_VERSION
-            << "                                            SoC: 0'C\n";
+  std::stringstream app_info;
+  app_info << APP_NAME << " Nintendo Switch v" << APP_VERSION << " by " << APP_AUTHOR_NAME;
+
+  uint8_t remaining_width = CONSOLE_WIDTH - app_info.str().length();
+
+  std::cout << app_info.str() << std::setw(remaining_width) << std::right << "SoC: 0'C\n";
   std::cout << "-------------------------------------------------------------------------------\n";
 }
 
 void nspi::Menu::printFooter() const {
+  uint8_t printableFocusIndex = 0;
+  if (this->dummyData.size() != 0) {
+    printableFocusIndex = focusIndex + 1;
+  }
+
+  std::stringstream nav_info;
+  nav_info << "(" << (int)printableFocusIndex << "/" << this->dummyData.size() << ")";
+
+  uint8_t remaining_width = CONSOLE_WIDTH - nav_info.str().length();
+
   std::cout << "-------------------------------------------------------------------------------\n";
-  std::cout << "(" << focusIndex + 1 << "/" << this->dummyData.size() << ")" << APP_AUTHOR_NAME
-            << "            A - install  Y - menu             " << std::right << "Free: 5,00 MB\n";
+  std::cout << nav_info.str() << std::setw(remaining_width) << std::right
+            << "[-] Load [+] Exit [X] De/Select [Y] Info [B] Back \e[9m[A] Install\e[0m\n";
 }
 
 void nspi::Menu::printContent() const {
@@ -101,6 +115,11 @@ void nspi::Menu::focusPrevious(uint16_t steps) {
 }
 
 void nspi::Menu::focusNext(uint16_t steps) {
+  if (this->dummyData.size() == 0) {
+    this->focusIndex = 0;
+    return;
+  }
+
   if (this->focusIndex + steps > this->dummyData.size()) {
     this->focusIndex = this->dummyData.size() - 1;
   }
