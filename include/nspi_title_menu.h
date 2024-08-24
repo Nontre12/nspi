@@ -17,7 +17,6 @@ class TitleMenu : public Menu {
   Pad& pad;
   Title title;
 
-  void printHeader() const;
   void printContent() const;
   void printFooter() const;
 
@@ -29,7 +28,6 @@ class TitleMenu : public Menu {
   TitleMenu& operator=(const TitleMenu&) = delete;
 
   void handleInput();
-  void draw() const;
 };
 
 }  // namespace nspi

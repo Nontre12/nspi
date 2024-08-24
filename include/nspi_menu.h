@@ -14,10 +14,14 @@ class Menu {
   static constexpr uint8_t FOOTER_HEIGHT = 2;
   static constexpr uint8_t VISIBLE_ITEMS = CONSOLE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
 
+  virtual void printHeader() const;
+  virtual void printContent() const = 0;
+  virtual void printFooter() const = 0;
+
  public:
   virtual ~Menu() = default;
   virtual void handleInput() = 0;
-  virtual void draw() const = 0;
+  virtual void draw() const;
 };
 
 }  // namespace nspi
