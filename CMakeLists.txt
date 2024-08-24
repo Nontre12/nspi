@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(BUILD_SHARED_LIBS OFF)
+
 set(APP_AUTHOR_NAME "Nontre")
 set(APP_NAME "NSPi")
 set(APP_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
@@ -43,7 +45,7 @@ target_compile_options(${APP_NAME}.elf PRIVATE
     -mtp=soft
     -fPIE
     -D__SWITCH__
-    #-fno-exceptions
+    -fno-exceptions
     -DCURL_STATICLIB # curl-config --cflags
 )
 
