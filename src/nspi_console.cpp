@@ -7,7 +7,7 @@ nspi::Console::Console() { this->init(); }
 
 nspi::Console::~Console() { this->clean(); }
 
-void nspi::Console::update() {
+void nspi::Console::update() const {
   consoleUpdate(nullptr);
   consoleClear();
 }

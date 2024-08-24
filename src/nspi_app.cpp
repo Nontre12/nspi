@@ -1,153 +1,29 @@
 #include "nspi_app.h"
 
-// external
-#include <curl/curl.h>
-
-#include <nlohmann/json.hpp>
-
 // std
 #include <iostream>
 #include <sstream>
+
+#include "nspi_title_selector_menu.h"
 
 nspi::App::App() : quit(false) { this->init(); }
 
 nspi::App::~App() { this->clean(); }
 
-static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* userp) {
-  size_t totalSize = size * nmemb;
-  userp->append((char*)contents, totalSize);
-  return totalSize;
+void nspi::App::init() {
+  socketInitializeDefault();
+
+  this->menu.push(new TitleSelectorMenu{pad});
 }
 
-// Helper function to safely copy strings into fixed-size char arrays
-static void copyStringToCharArray(const std::string& source, char* destination, size_t maxSize) {
-  strncpy(destination, source.c_str(), maxSize - 1);
-  destination[maxSize - 1] = '\0';  // Ensure null termination
-}
-
-std::string nspi::App::retrieveRawDataFromEndpoint(const std::string& endpoint) const {
-  CURL* curl;
-  CURLcode res;
-  std::string responseBody = "";
-
-  curl_global_init(CURL_GLOBAL_DEFAULT);
-  curl = curl_easy_init();
-  if (curl) {
-    struct curl_slist* headers = nullptr;
-    headers = curl_slist_append(headers, "Accept: application/json");
-    headers = curl_slist_append(headers, "Content-Type: application/json");
-
-    curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str());
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBody);
-
-    res = curl_easy_perform(curl);
-    if (res != CURLE_OK) {
-      std::stringstream ss;
-      ss << "curl_easy_perform() failed: " << curl_easy_strerror(res);
-
-      std::cerr << ss.str() << std::endl;
-    }
-
-    curl_easy_cleanup(curl);
+void nspi::App::clean() {
+  while (!this->menu.empty()) {
+    delete this->menu.top();
+    this->menu.pop();
   }
 
-  curl_global_cleanup();
-
-  return responseBody;
+  socketExit();
 }
-
-std::vector<nspi::Title> nspi::App::retrieveTitlesFromRawData(const std::string& rawData) const {
-  std::vector<nspi::Title> titles;
-
-  nlohmann::json jsonData = nlohmann::json::value_t::discarded;
-  nlohmann::json parseResult = nlohmann::json::parse(rawData, nullptr, false);
-
-  // Check if the parsing was successful
-  if (!parseResult.is_discarded()) {
-    jsonData = parseResult;
-  } else {
-    std::cerr << "Failed to parse raw data into JSON.\n";
-    return titles;
-  }
-
-  if (jsonData.contains("titledb") && jsonData["titledb"].is_object()) {
-    nlohmann::json titledb = jsonData["titledb"];
-    int count = 0;
-
-    for (auto it = titledb.begin(); it != titledb.end(); ++it) {
-      if (count >= 20000) break;  // Limit amount of entries available
-
-      const nlohmann::json& value = it.value();
-      Title title;
-
-      // Initialize the struct with default values
-      std::memset(&title, 0, sizeof(Title));
-
-      if (value.contains("releaseDate") && value["releaseDate"].is_number_integer()) {
-        title.releaseDate = static_cast<uint32_t>(value["releaseDate"].get<uint32_t>());
-      }
-
-      if (value.contains("size") && value["size"].is_number_integer()) {
-        title.size = static_cast<uint32_t>(value["size"].get<uint32_t>());
-      }
-
-      if (value.contains("region") && value["region"].is_string()) {
-        copyStringToCharArray(
-            value["region"].get<std::string>(),
-            title.region,
-            sizeof(title.region));
-      }
-
-      if (value.contains("id") && value["id"].is_string()) {
-        copyStringToCharArray(value["id"].get<std::string>(), title.id, sizeof(title.id));
-      }
-
-      if (value.contains("publisher") && value["publisher"].is_string()) {
-        copyStringToCharArray(
-            value["publisher"].get<std::string>(),
-            title.publisher,
-            sizeof(title.publisher));
-      }
-
-      if (value.contains("name") && value["name"].is_string()) {
-        copyStringToCharArray(value["name"].get<std::string>(), title.name, sizeof(title.name));
-      }
-
-      if (value.contains("version") && value["version"].is_string()) {
-        copyStringToCharArray(
-            value["version"].get<std::string>(),
-            title.version,
-            sizeof(title.version));
-      }
-
-      if (value.contains("description") && value["description"].is_string()) {
-        copyStringToCharArray(
-            value["description"].get<std::string>(),
-            title.description,
-            sizeof(title.description));
-      }
-
-      titles.push_back(title);
-      ++count;
-    }
-  } else {
-    std::cerr << "'titledb' not found or is not an object\n";
-  }
-
-  return titles;
-}
-
-std::vector<nspi::Title> nspi::App::fetchTitles(const std::string& endpoint) const {
-  std::string rawData = this->retrieveRawDataFromEndpoint(endpoint);
-  return this->retrieveTitlesFromRawData(rawData);
-}
-
-void nspi::App::init() { socketInitializeDefault(); }
-
-void nspi::App::clean() { socketExit(); }
 
 bool nspi::App::shouldClose() const { return this->quit || !appletMainLoop(); }
 
@@ -166,22 +42,17 @@ void nspi::App::handleInput() {
     this->quit = true;
   }
 
-  static bool contentLoaded = false;
-  if (kDown & HidNpadButton_Minus && !contentLoaded) {
-    std::vector<nspi::Title> titles =
-        this->fetchTitles("https://raw.githubusercontent.com/ghost-land/NX-DB/main/fulldb.json");
-
-    this->menu.addEntries(titles);
-
-    contentLoaded = true;
-  }
-
   // delegate input to current menu after critical input checks
-  this->menu.handleInput();
+  if (!this->menu.empty()) {
+    this->menu.top()->handleInput();
+  }
 }
 
-void nspi::App::draw() {
-  this->menu.draw();
+void nspi::App::draw() const {
+  if (!this->menu.empty()) {
+    this->menu.top()->draw();
+  }
+
   this->console.update();
 }
 

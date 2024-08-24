@@ -1,7 +1,7 @@
 #ifndef NSPI_APP_H_
 #define NSPI_APP_H_
 
-#include <string>
+#include <stack>
 
 #include "nspi_console.h"
 #include "nspi_menu.h"
@@ -13,7 +13,7 @@ class App {
  private:
   Console console;
   Pad pad;
-  Menu menu{pad};
+  std::stack<nspi::Menu*> menu;
 
   bool quit;
   bool shouldClose() const;
@@ -24,12 +24,7 @@ class App {
   void mainLoop();
 
   void handleInput();
-  void draw();
-
-  std::string retrieveRawDataFromEndpoint(const std::string& endpoint) const;
-  std::vector<nspi::Title> retrieveTitlesFromRawData(const std::string& rawData) const;
-
-  std::vector<nspi::Title> fetchTitles(const std::string& endpoint) const;
+  void draw() const;
 
  public:
   App();
