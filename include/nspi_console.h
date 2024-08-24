@@ -15,7 +15,7 @@ class Console {
   Console(const Console&) = delete;
   Console& operator=(const Console&) = delete;
 
-  void update();
+  void update() const;
 };
 
 }  // namespace nspi
