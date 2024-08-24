@@ -1,10 +1,9 @@
 #ifndef NSPI_APP_H_
 #define NSPI_APP_H_
 
-#include <string>
-
 #include "nspi_console.h"
 #include "nspi_menu.h"
+#include "nspi_menu_manager.h"
 #include "nspi_pad.h"
 
 namespace nspi {
@@ -13,7 +12,7 @@ class App {
  private:
   Console console;
   Pad pad;
-  Menu menu{pad};
+  MenuManager menuManager{pad};
 
   bool quit;
   bool shouldClose() const;
@@ -24,10 +23,7 @@ class App {
   void mainLoop();
 
   void handleInput();
-  void draw();
-
-  std::string retrieveRawDataFromEndpoint() const;
-  std::vector<nspi::Title> retrieveTitlesFromRawData(const std::string& rawData) const;
+  void draw() const;
 
  public:
   App();

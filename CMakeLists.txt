@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name and version
-project(NSPi VERSION 0.0.1 LANGUAGES C CXX)
+project(NSPi VERSION 0.0.2 LANGUAGES C CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(BUILD_SHARED_LIBS OFF)
 
 set(APP_AUTHOR_NAME "Nontre")
 set(APP_NAME "NSPi")
@@ -19,7 +21,9 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_console.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_pad.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_menu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_menu_manager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_title_selector_menu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_title_menu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_app.cpp
 )
 
@@ -43,7 +47,7 @@ target_compile_options(${APP_NAME}.elf PRIVATE
     -mtp=soft
     -fPIE
     -D__SWITCH__
-    #-fno-exceptions
+    -fno-exceptions
     -DCURL_STATICLIB # curl-config --cflags
 )
 
