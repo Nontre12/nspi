@@ -24,8 +24,8 @@ class TitleSelectorMenu : public Menu {
   Pad& pad;
   std::vector<Title> dummyData;
 
-  void printContent() const;
-  void printFooter() const;
+  void printContent() const override;
+  void printFooter() const override;
 
   /**
    * @param steps Amount of steps. Default 1
@@ -42,12 +42,12 @@ class TitleSelectorMenu : public Menu {
 
  public:
   explicit TitleSelectorMenu(MenuManager&, Pad&);
-  ~TitleSelectorMenu() = default;
+  ~TitleSelectorMenu() override = default;
 
   TitleSelectorMenu(const TitleSelectorMenu&) = delete;
   TitleSelectorMenu& operator=(const TitleSelectorMenu&) = delete;
 
-  void handleInput();
+  void handleInput() override;
 };
 
 }  // namespace nspi
