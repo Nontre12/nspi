@@ -46,18 +46,11 @@ target_include_directories(nx PUBLIC
 
 # Compile options
 target_compile_options(nx PRIVATE
-    -g
-    -Wall
-    -Werror
     -ffunction-sections
     -fdata-sections
-    -march=armv8-a+crc+crypto
-    -mtune=cortex-a57
     -mtp=soft
     -fPIC
     -ftls-model=local-exec
-    -DNDEBUG=1
-    -O2
     -iquote ${LIBNX_PATH}/include/switch/
     -D__SWITCH__
     -DLIBNX_NO_DEPRECATION
@@ -71,5 +64,5 @@ file(GLOB_RECURSE ASM_FILES ${LIBNX_PATH}/source/*.s
 
 # Set custom flags for assembly files
 set_source_files_properties(${ASM_FILES} PROPERTIES COMPILE_FLAGS
-    "-x assembler-with-cpp -g -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIC -ftls-model=local-exec"
+    "-x assembler-with-cpp -mtp=soft -fPIC -ftls-model=local-exec"
 )
