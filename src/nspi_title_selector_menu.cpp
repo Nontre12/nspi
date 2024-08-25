@@ -105,7 +105,7 @@ void nspi::TitleSelectorMenu::handleInput() {
 
   if (kDown & HidNpadButton_Y) {
     if (!dummyData.empty()) {
-      this->menuManager.enter(new TitleMenu(menuManager, pad, dummyData[focusIndex]));
+      this->menuManager.next(new TitleMenu(menuManager, pad, dummyData[focusIndex]));
     }
   }
 
