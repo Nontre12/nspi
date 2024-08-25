@@ -48,21 +48,9 @@ target_include_directories(nx PUBLIC
 target_compile_options(nx PRIVATE
     -ffunction-sections
     -fdata-sections
-    -mtp=soft
     -fPIC
     -ftls-model=local-exec
     -iquote ${LIBNX_PATH}/include/switch/
     -D__SWITCH__
     -DLIBNX_NO_DEPRECATION
-)
-
-# Apply custom flags to assembly files (*.s)
-file(GLOB_RECURSE ASM_FILES ${LIBNX_PATH}/source/*.s
-                            # Workarround for default_font.bin.s
-                            ${TMP_ASM_FILE}
-)
-
-# Set custom flags for assembly files
-set_source_files_properties(${ASM_FILES} PROPERTIES COMPILE_FLAGS
-    "-x assembler-with-cpp -mtp=soft -fPIC -ftls-model=local-exec"
 )
