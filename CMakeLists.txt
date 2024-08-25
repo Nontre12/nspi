@@ -60,7 +60,6 @@ target_link_options(${APP_NAME}.elf PRIVATE
 )
 
 add_subdirectory(lib)
-add_subdirectory(lib/json)
 
 # Libraries to link against
 target_link_libraries(${APP_NAME}.elf nx nlohmann_json)
