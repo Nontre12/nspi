@@ -15,6 +15,7 @@ struct Title {
   char version[49];        // 49 bytes
   char description[1025];  // 1025 bytes
 };
+
 }  // namespace nspi
 
 #endif  // NSPI_TITLE_H_
