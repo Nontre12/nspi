@@ -8,6 +8,10 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_ASM_FLAGS_DEBUG} -Wall -Wextra")
+
 set(BUILD_SHARED_LIBS OFF)
 
 set(APP_AUTHOR_NAME "Nontre")
@@ -39,13 +43,7 @@ target_include_directories(${APP_NAME}.elf PRIVATE
 
 # Compilation flags
 target_compile_options(${APP_NAME}.elf PRIVATE
-    -g
-    -Wall
-    -O2
     -ffunction-sections
-    -march=armv8-a+crc+crypto
-    -mtune=cortex-a57
-    -mtp=soft
     -fPIE
     -D__SWITCH__
     -fno-exceptions
@@ -55,16 +53,11 @@ target_compile_options(${APP_NAME}.elf PRIVATE
 # Linker flags
 target_link_options(${APP_NAME}.elf PRIVATE
     -specs=${CMAKE_CURRENT_SOURCE_DIR}/lib/libnx/nx/switch.specs
-    -g
-    -march=armv8-a+crc+crypto
-    -mtune=cortex-a57
-    -mtp=soft
     -fPIE
     -Wl,-Map,${APP_NAME}.map
 )
 
 add_subdirectory(lib)
-add_subdirectory(lib/json)
 
 # Libraries to link against
 target_link_libraries(${APP_NAME}.elf nx nlohmann_json)

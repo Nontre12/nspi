@@ -30,7 +30,7 @@ To build this project from source, you'll need to set up the appropriate develop
 2. Use the Docker image to build the project
     ```bash
     docker run --rm -it -v "$(pwd):/app" --workdir=/app devkitpro/devkita64:latest bash
-    cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain.cmake
+    cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain.cmake -DCMAKE_BUILD_TYPE=Release
     cd build
     make -j$(nproc)
     ```

@@ -15,19 +15,19 @@ class TitleMenu : public Menu {
  private:
   MenuManager& menuManager;
   Pad& pad;
-  Title title;
+  const Title title;
 
-  void printContent() const;
-  void printFooter() const;
+  void printContent() const override;
+  void printFooter() const override;
 
  public:
-  explicit TitleMenu(MenuManager&, Pad&, Title);
-  ~TitleMenu() = default;
+  explicit TitleMenu(MenuManager&, Pad&, const Title&);
+  ~TitleMenu() override = default;
 
   TitleMenu(const TitleMenu&) = delete;
   TitleMenu& operator=(const TitleMenu&) = delete;
 
-  void handleInput();
+  void handleInput() override;
 };
 
 }  // namespace nspi

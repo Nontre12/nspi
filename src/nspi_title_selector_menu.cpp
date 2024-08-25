@@ -22,29 +22,32 @@ void nspi::TitleSelectorMenu::printFooter() const {
 
   uint8_t remaining_width = CONSOLE_WIDTH - nav_info.str().length();
 
-  std::cout << "-------------------------------------------------------------------------------\n";
-  std::cout << nav_info.str() << std::setw(remaining_width) << std::right
-            << "[-] Load [+] Exit [X] De/Select [Y] Info [B] Back \e[9m[A] Install\e[0m\n";
+  std::cout << "-------------------------------------------------------------------------------\n"
+            << nav_info.str() << std::setw(remaining_width) << std::right
+            << "[-] Load [+] Exit [X] De/Select [Y] Info [B] Back \e[9m[A] Install\e[0m"
+            << std::endl;
 }
 
 void nspi::TitleSelectorMenu::printContent() const {
+  std::stringstream output;
+
   size_t printedItems = 0;
   for (size_t i = focusOffset; i < dummyData.size(); i++) {
     if (printedItems >= VISIBLE_ITEMS) break;
 
     if (i == this->focusIndex) {
-      std::cout << "\033[1;41m";  // Highlight focused item
+      output << "\033[1;41m";  // Highlight focused item
     } else if (this->marked.find(i) != this->marked.end()) {
-      std::cout << "\033[1;43m";  // Highlight marked item
+      output << "\033[1;43m";  // Highlight marked item
     }
 
     std::string name = dummyData[i].name;
     if (name.length() > 40) {
-      name = name.substr(0, 37) + "...";
+      name.replace(37, std::string::npos, "...");
     }
 
     // clang-format off
-    std::cout << std::setw(17) << std::left << dummyData[i].id
+    output << std::setw(17) << std::left << dummyData[i].id
               << std::setw(3) << std::left << dummyData[i].region
               << std::setw(40) << std::left << name
               << std::setw(16) << std::right << dummyData[i].size << " B"
@@ -56,9 +59,11 @@ void nspi::TitleSelectorMenu::printContent() const {
 
   // Padding for empty rows
   while (printedItems < VISIBLE_ITEMS) {
-    std::cout << std::endl;
+    output << std::endl;
     printedItems++;
   }
+
+  std::cout << output.str();
 }
 
 nspi::TitleSelectorMenu::TitleSelectorMenu(MenuManager& menuManager, Pad& pad)
@@ -105,7 +110,7 @@ void nspi::TitleSelectorMenu::handleInput() {
 
   if (kDown & HidNpadButton_Y) {
     if (!dummyData.empty()) {
-      this->menuManager.enter(new TitleMenu(menuManager, pad, dummyData[focusIndex]));
+      this->menuManager.next(new TitleMenu(menuManager, pad, dummyData[focusIndex]));
     }
   }
 

@@ -18,10 +18,13 @@ class MenuManager {
   void clean();
 
  public:
-  MenuManager(Pad &);
+  explicit MenuManager(Pad &);
   ~MenuManager();
 
-  void enter(nspi::Menu *);
+  MenuManager(const MenuManager &) = delete;
+  MenuManager &operator=(const MenuManager &) = delete;
+
+  void next(nspi::Menu *);
   void back();
 
   void handleInput();
