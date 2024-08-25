@@ -17,6 +17,8 @@ set(CMAKE_OBJDUMP /opt/devkitpro/devkitA64/bin/aarch64-none-elf-objdump)
 set(CMAKE_RANLIB /opt/devkitpro/devkitA64/bin/aarch64-none-elf-ranlib)
 set(CMAKE_STRIP /opt/devkitpro/devkitA64/bin/aarch64-none-elf-strip)
 
-set(CMAKE_C_FLAGS "-march=armv8-a+crc+crypto -mtune=cortex-a57")
-set(CMAKE_CXX_FLAGS "-march=armv8-a+crc+crypto -mtune=cortex-a57")
-set(CMAKE_ASM_FLAGS "-march=armv8-a+crc+crypto -mtune=cortex-a57")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft")
+
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft")

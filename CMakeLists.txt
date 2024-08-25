@@ -44,7 +44,6 @@ target_include_directories(${APP_NAME}.elf PRIVATE
 # Compilation flags
 target_compile_options(${APP_NAME}.elf PRIVATE
     -ffunction-sections
-    -mtp=soft
     -fPIE
     -D__SWITCH__
     -fno-exceptions
@@ -54,7 +53,6 @@ target_compile_options(${APP_NAME}.elf PRIVATE
 # Linker flags
 target_link_options(${APP_NAME}.elf PRIVATE
     -specs=${CMAKE_CURRENT_SOURCE_DIR}/lib/libnx/nx/switch.specs
-    -mtp=soft
     -fPIE
     -Wl,-Map,${APP_NAME}.map
 )
