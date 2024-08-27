@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name and version
-project(NSPi VERSION 0.0.2 LANGUAGES C CXX)
+project(NSPi VERSION 0.0.3 LANGUAGES C CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 14)
