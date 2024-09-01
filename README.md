@@ -8,7 +8,7 @@ The `nspi` homebrew app allows to download packages directly on your Switch
 
 ![](https://nontre.es/assets/2024-08-20-nspi.jpg)
 
-## Build
+## Build (Switch)
 To build this project from source, you'll need to set up the appropriate development environment.
 
 ### Requirements
@@ -35,8 +35,22 @@ To build this project from source, you'll need to set up the appropriate develop
     make -j$(nproc)
     ```
 
+3. Send built package to switch with nxlink (optional)
+    ```bash
+    nxlink -a xxx.xxx.xxx.xxx NSPi.nro
+    ```
+
+
 ### Note for libnx
 In this project, instead of linking the precompiled libnx library provided by devkitPro, I preferred to add libnx compilation to the build process. This means that libnx will be built from source as part of this project's build process, ensuring that you have the latest version and any custom modifications needed for this project.
+
+## Build (Linux) (Partially working)
+```bash
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+cd build
+make -j$(nproc)
+./NSPi
+```
 
 ## Install
 1. Download the `NSPi.nro` file.
