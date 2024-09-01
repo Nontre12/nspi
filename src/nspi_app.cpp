@@ -1,8 +1,11 @@
 #include "nspi_app.h"
 
-// std
-#include <iostream>
-#include <sstream>
+// libnx
+#ifdef __SWITCH__
+#include <switch.h>
+#else
+#include "nspi_linux_switch.h"
+#endif
 
 #include "nspi_title_selector_menu.h"
 
@@ -26,7 +29,7 @@ void nspi::App::mainLoop() {
 
 void nspi::App::handleInput() {
   this->pad.update();
-  u64 kDown = this->pad.getButtonsDown();
+  uint64_t kDown = this->pad.getButtonsDown();
   if (kDown & HidNpadButton_Plus) {
     this->quit = true;
   }

@@ -18,7 +18,13 @@ set(APP_AUTHOR_NAME "Nontre")
 set(APP_NAME "NSPi")
 set(APP_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
+set(SWITCH_BUILD OFF)
+set(ELF_APP ${APP_NAME})
+
+if (CMAKE_SYSTEM_NAME MATCHES "Switch")
+set(SWITCH_BUILD ON)
 set(ELF_APP ${APP_NAME}.elf)
+endif()
 
 configure_file(nspi_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/nspi_config.h @ONLY)
 
@@ -40,37 +46,43 @@ add_executable(${ELF_APP} ${SOURCE_FILES})
 target_include_directories(${ELF_APP} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}
-    /opt/devkitpro/portlibs/switch/include
 )
+
+if (SWITCH_BUILD)
+target_include_directories(${ELF_APP} PRIVATE /opt/devkitpro/portlibs/switch/include)
+endif()
 
 # Compilation flags
 target_compile_options(${ELF_APP} PRIVATE
     -ffunction-sections
     -fPIE
-    -D__SWITCH__
     -fno-exceptions
     -DCURL_STATICLIB # curl-config --cflags
 )
 
+if (SWITCH_BUILD)
 # Linker flags
 target_link_options(${ELF_APP} PRIVATE
     -specs=${CMAKE_CURRENT_SOURCE_DIR}/lib/libnx/nx/switch.specs
     -fPIE
     -Wl,-Map,${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.map
 )
+endif()
 
 add_subdirectory(lib)
 
-# Libraries to link against
+if (SWITCH_BUILD)
 target_link_directories(${ELF_APP} PRIVATE /opt/devkitpro/portlibs/switch/lib)
-target_link_libraries(${ELF_APP}
-    nlohmann_json
-    curl z # curl-config --libs
-    nx
-)
+endif()
+
+if (SWITCH_BUILD)
+target_link_libraries(${ELF_APP} PRIVATE nlohmann_json curl z nx)
+else()
+target_link_libraries(${ELF_APP} PRIVATE nlohmann_json curl z)
+endif()
 
 # Post-build steps
-
+if (SWITCH_BUILD)
 # Create LST file
 add_custom_command(TARGET ${ELF_APP} POST_BUILD
     COMMAND ${CMAKE_NM} -CSn $<TARGET_FILE:${ELF_APP}> > ${APP_NAME}.lst
@@ -94,3 +106,4 @@ add_custom_command(TARGET ${ELF_APP} POST_BUILD
             ${CMAKE_CURRENT_SOURCE_DIR}/icon.jpg
     COMMENT "Converting ELF to NRO"
 )
+endif()

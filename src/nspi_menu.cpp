@@ -1,7 +1,11 @@
 #include "nspi_menu.h"
 
 // libnx
+#ifdef __SWITCH__
 #include <switch.h>
+#else
+#include "nspi_linux_switch.h"
+#endif
 
 // std
 #include <iomanip>

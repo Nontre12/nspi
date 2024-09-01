@@ -70,7 +70,7 @@ nspi::TitleSelectorMenu::TitleSelectorMenu(MenuManager& menuManager, Pad& pad)
     : focusIndex(0), focusOffset(0), menuManager(menuManager), pad(pad) {}
 
 void nspi::TitleSelectorMenu::handleInput() {
-  u64 kDown = this->pad.getButtonsDown();
+  uint64_t kDown = this->pad.getButtonsDown();
   HidAnalogStickState left_stick_state = this->pad.getStickPos(0);
   // HidAnalogStickState right_stick_state = this->pad.getStickPos(1);
 

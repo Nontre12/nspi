@@ -1,6 +1,8 @@
 set(CMAKE_SYSTEM_NAME Switch)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
 
+add_compile_definitions(__SWITCH__)
+
 set(CMAKE_C_COMPILER_TARGET aarch64-none-elf)
 set(CMAKE_CXX_COMPILER_TARGET aarch64-none-elf)
 
