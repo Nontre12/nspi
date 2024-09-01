@@ -38,9 +38,7 @@ static inline void consoleInit(void*) {}
 
 static inline void consoleExit(void*) {}
 
-static inline void consoleUpdate(void*) {
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
-}
+static inline void consoleUpdate(void*) {}
 
 static inline void consoleClear(void) { std::cout << "\033[2J\033[1;1H"; }
 // end console.c
@@ -78,41 +76,41 @@ typedef enum {
 } HidNpadStyleTag;
 
 typedef enum {
-  HidNpadButton_A,              ///< A button / Right face button
-  HidNpadButton_B,              ///< B button / Down face button
-  HidNpadButton_X,              ///< X button / Up face button
-  HidNpadButton_Y,              ///< Y button / Left face button
-  HidNpadButton_StickL,         ///< Left Stick button
-  HidNpadButton_StickR,         ///< Right Stick button
-  HidNpadButton_L,              ///< L button
-  HidNpadButton_R,              ///< R button
-  HidNpadButton_ZL,             ///< ZL button
-  HidNpadButton_ZR,             ///< ZR button
-  HidNpadButton_Plus,           ///< Plus button
-  HidNpadButton_Minus,          ///< Minus button
-  HidNpadButton_Left,           ///< D-Pad Left button
-  HidNpadButton_Up,             ///< D-Pad Up button
-  HidNpadButton_Right,          ///< D-Pad Right button
-  HidNpadButton_Down,           ///< D-Pad Down button
-  HidNpadButton_StickLLeft,     ///< Left Stick pseudo-button when moved Left
-  HidNpadButton_StickLUp,       ///< Left Stick pseudo-button when moved Up
-  HidNpadButton_StickLRight,    ///< Left Stick pseudo-button when moved Right
-  HidNpadButton_StickLDown,     ///< Left Stick pseudo-button when moved Down
-  HidNpadButton_StickRLeft,     ///< Right Stick pseudo-button when moved Left
-  HidNpadButton_StickRUp,       ///< Right Stick pseudo-button when moved Up
-  HidNpadButton_StickRRight,    ///< Right Stick pseudo-button when moved Right
-  HidNpadButton_StickRDown,     ///< Right Stick pseudo-button when moved Left
-  HidNpadButton_LeftSL,         ///< SL button on Left Joy-Con
-  HidNpadButton_LeftSR,         ///< SR button on Left Joy-Con
-  HidNpadButton_RightSL,        ///< SL button on Right Joy-Con
-  HidNpadButton_RightSR,        ///< SR button on Right Joy-Con
-  HidNpadButton_Palma,          ///< Top button on Poké Ball Plus (Palma) controller
-  HidNpadButton_Verification,   ///< Verification
-  HidNpadButton_HandheldLeftB,  ///< B button on Left NES/HVC controller in Handheld mode
-  HidNpadButton_LagonCLeft,     ///< Left C button in N64 controller
-  HidNpadButton_LagonCUp,       ///< Up C button in N64 controller
-  HidNpadButton_LagonCRight,    ///< Right C button in N64 controller
-  HidNpadButton_LagonCDown,     ///< Down C button in N64 controller
+  HidNpadButton_A = 1UL << (0),              ///< A button / Right face button
+  HidNpadButton_B = 1UL << (1),              ///< B button / Down face button
+  HidNpadButton_X = 1UL << (2),              ///< X button / Up face button
+  HidNpadButton_Y = 1UL << (3),              ///< Y button / Left face button
+  HidNpadButton_StickL = 1UL << (4),         ///< Left Stick button
+  HidNpadButton_StickR = 1UL << (5),         ///< Right Stick button
+  HidNpadButton_L = 1UL << (6),              ///< L button
+  HidNpadButton_R = 1UL << (7),              ///< R button
+  HidNpadButton_ZL = 1UL << (8),             ///< ZL button
+  HidNpadButton_ZR = 1UL << (9),             ///< ZR button
+  HidNpadButton_Plus = 1UL << (10),          ///< Plus button
+  HidNpadButton_Minus = 1UL << (11),         ///< Minus button
+  HidNpadButton_Left = 1UL << (12),          ///< D-Pad Left button
+  HidNpadButton_Up = 1UL << (13),            ///< D-Pad Up button
+  HidNpadButton_Right = 1UL << (14),         ///< D-Pad Right button
+  HidNpadButton_Down = 1UL << (15),          ///< D-Pad Down button
+  HidNpadButton_StickLLeft = 1UL << (16),    ///< Left Stick pseudo-button when moved Left
+  HidNpadButton_StickLUp = 1UL << (17),      ///< Left Stick pseudo-button when moved Up
+  HidNpadButton_StickLRight = 1UL << (18),   ///< Left Stick pseudo-button when moved Right
+  HidNpadButton_StickLDown = 1UL << (19),    ///< Left Stick pseudo-button when moved Down
+  HidNpadButton_StickRLeft = 1UL << (20),    ///< Right Stick pseudo-button when moved Left
+  HidNpadButton_StickRUp = 1UL << (21),      ///< Right Stick pseudo-button when moved Up
+  HidNpadButton_StickRRight = 1UL << (22),   ///< Right Stick pseudo-button when moved Right
+  HidNpadButton_StickRDown = 1UL << (23),    ///< Right Stick pseudo-button when moved Left
+  HidNpadButton_LeftSL = 1UL << (24),        ///< SL button on Left Joy-Con
+  HidNpadButton_LeftSR = 1UL << (25),        ///< SR button on Left Joy-Con
+  HidNpadButton_RightSL = 1UL << (26),       ///< SL button on Right Joy-Con
+  HidNpadButton_RightSR = 1UL << (27),       ///< SR button on Right Joy-Con
+  HidNpadButton_Palma = 1UL << (28),         ///< Top button on Poké Ball Plus (Palma) controller
+  HidNpadButton_Verification = 1UL << (29),  ///< Verification
+  HidNpadButton_HandheldLeftB = 1UL << (30), ///< B button on Left NES/HVC controller in Handheld mode
+  HidNpadButton_LagonCLeft = 1UL << (31),    ///< Left C button in N64 controller
+  HidNpadButton_LagonCUp = 1UL << (32),      ///< Up C button in N64 controller
+  HidNpadButton_LagonCRight = 1UL << (33),   ///< Right C button in N64 controller
+  HidNpadButton_LagonCDown = 1UL << (34),    ///< Down C button in N64 controller
 
   HidNpadButton_AnyLeft = HidNpadButton_Left | HidNpadButton_StickLLeft |
                           HidNpadButton_StickRLeft,  ///< Bitmask containing all buttons that are
@@ -151,7 +149,7 @@ typedef struct {
 
 static inline void padUpdate(const PadState*) {}
 
-static inline constexpr uint64_t padGetButtonsDown(const PadState*) { return uint64_t{0}; }
+static inline constexpr uint64_t padGetButtonsDown(const PadState*) { return HidNpadButton_Right; }
 
 static inline HidAnalogStickState padGetStickPos(const PadState*, uint8_t) {
   return HidAnalogStickState{};
