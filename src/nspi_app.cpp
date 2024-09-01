@@ -26,29 +26,24 @@ bool nspi::App::shouldClose() const { return this->quit || !appletMainLoop(); }
 void nspi::App::mainLoop() {
   constexpr int targetFPS = 60;
   constexpr std::chrono::milliseconds targetFrameDuration(1000 / targetFPS);
-  constexpr std::chrono::milliseconds inputCheckInterval(1);
+
+  auto lastFrameTime = std::chrono::steady_clock::now();
 
   while (!this->shouldClose()) {
-    auto frameStartTime = std::chrono::steady_clock::now();
-
     this->handleInput();
-    this->draw();
 
-    auto frameDuration = std::chrono::steady_clock::now() - frameStartTime;
+    auto currentTime = std::chrono::steady_clock::now();
 
-    // Remaining time for current frame
-    auto remainingTime = targetFrameDuration - frameDuration;
-
-    while (remainingTime > inputCheckInterval) {
-      this->handleInput();  // Check for input during frame capping
-      std::this_thread::sleep_for(inputCheckInterval);
-      remainingTime -= inputCheckInterval;
+    // time to render the next frame?
+    auto elapsedTime =
+        std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastFrameTime);
+    if (elapsedTime >= targetFrameDuration) {
+      this->draw();
+      lastFrameTime = currentTime;
     }
 
-    // Sleep for remaining time less than the input check interval
-    if (remainingTime > std::chrono::milliseconds(0)) {
-      std::this_thread::sleep_for(remainingTime);
-    }
+    // avoid max CPU speed
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 }
 
