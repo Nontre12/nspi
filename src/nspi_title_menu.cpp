@@ -37,7 +37,7 @@ nspi::TitleMenu::TitleMenu(MenuManager& menuManager, Pad& pad, const Title& titl
     : menuManager(menuManager), pad(pad), title(title) {}
 
 void nspi::TitleMenu::handleInput() {
-  u64 kDown = this->pad.getButtonsDown();
+  uint64_t kDown = this->pad.getButtonsDown();
 
   if (kDown & HidNpadButton_B) {
     this->menuManager.back();

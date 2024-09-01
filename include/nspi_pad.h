@@ -1,7 +1,15 @@
 #ifndef NSPI_PAD_H_
 #define NSPI_PAD_H_
 
+// libnx
+#ifdef __SWITCH__
 #include <switch.h>
+#else
+#include "nspi_linux_switch.h"
+#endif  // __SWITCH__
+
+// std
+#include <cstdint>
 
 namespace nspi {
 
@@ -19,7 +27,7 @@ class Pad {
 
   void update();
 
-  u64 getButtonsDown() const;
+  uint64_t getButtonsDown() const;
 
   /**
    * @param[in] id ID of the analog stick to read (0=left, 1=right).
