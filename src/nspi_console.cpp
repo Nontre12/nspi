@@ -1,7 +1,11 @@
 #include "nspi_console.h"
 
 // libnx
+#ifdef __SWITCH__
 #include <switch.h>
+#else
+#include "nspi_linux_switch.h"
+#endif
 
 nspi::Console::Console() { this->init(); }
 
