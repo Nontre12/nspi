@@ -11,6 +11,7 @@
 #include <chrono>
 #include <thread>
 
+#include "nspi_logger.h"
 #include "nspi_title_selector_menu.h"
 
 nspi::App::App() : quit(false) { this->init(); }
@@ -24,6 +25,8 @@ void nspi::App::clean() { socketExit(); }
 bool nspi::App::shouldClose() const { return this->quit || !appletMainLoop(); }
 
 void nspi::App::mainLoop() {
+  Logger::debug("Started App::mainLoop()");
+
   constexpr int targetFPS = 60;
   constexpr std::chrono::milliseconds targetFrameDuration(1000 / targetFPS);
 

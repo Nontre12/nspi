@@ -1,5 +1,7 @@
 #include "nspi_title_selector_menu.h"
 
+#include "nspi_logger.h"
+#include "nspi_logger_menu.h"
 #include "nspi_title_menu.h"
 
 // external
@@ -20,12 +22,11 @@ void nspi::TitleSelectorMenu::printFooter() const {
   std::stringstream nav_info;
   nav_info << "(" << (int)printableFocusIndex << "/" << this->dummyData.size() << ")";
 
-  uint8_t remaining_width = CONSOLE_WIDTH - nav_info.str().length();
+  uint8_t remaining_width = CONSOLE_WIDTH - nav_info.str().length() - 1;
 
   std::cout << "-------------------------------------------------------------------------------\n"
-            << nav_info.str() << std::setw(remaining_width) << std::right
-            << "[-] Load [+] Exit [X] De/Select [Y] Info [B] Back \e[9m[A] Install\e[0m"
-            << std::endl;
+            << nav_info.str() << std::setw(remaining_width)
+            << "[-] Load [+] Exit [Y] Logs [X] De/Select [B] Back [A] Title Info" << std::endl;
 }
 
 void nspi::TitleSelectorMenu::printContent() const {
@@ -67,36 +68,12 @@ void nspi::TitleSelectorMenu::printContent() const {
 }
 
 nspi::TitleSelectorMenu::TitleSelectorMenu(MenuManager& menuManager, Pad& pad)
-    : focusIndex(0), focusOffset(0), menuManager(menuManager), pad(pad) {}
+    : SelectableMenu(menuManager, pad) {}
 
 void nspi::TitleSelectorMenu::handleInput() {
+  SelectableMenu::handleInput();
+
   uint64_t kDown = this->pad.getButtonsDown();
-  HidAnalogStickState left_stick_state = this->pad.getStickPos(0);
-  // HidAnalogStickState right_stick_state = this->pad.getStickPos(1);
-
-  if (kDown & HidNpadButton_Up || left_stick_state.y > 30000) {
-    this->focusPrevious();
-  }
-
-  if (kDown & HidNpadButton_Down || left_stick_state.y < -30000) {
-    this->focusNext();
-  }
-
-  if (kDown & HidNpadButton_Left || left_stick_state.x < -30000) {
-    this->focusPrevious(5);
-  }
-
-  if (kDown & HidNpadButton_Right || left_stick_state.x > 30000) {
-    this->focusNext(5);
-  }
-
-  if (kDown & HidNpadButton_X) {
-    if (this->marked.find(focusIndex) == this->marked.end()) {
-      this->marked.insert(focusIndex);
-    } else {
-      this->marked.erase(focusIndex);
-    }
-  }
 
   static bool contentLoaded = false;
   if (kDown & HidNpadButton_Minus && !contentLoaded) {
@@ -114,36 +91,8 @@ void nspi::TitleSelectorMenu::handleInput() {
     }
   }
 
-  // Adjust focusOffset if necessary
-  if (focusIndex < focusOffset) {
-    focusOffset = focusIndex;
-  } else if (focusIndex >= focusOffset + VISIBLE_ITEMS) {
-    focusOffset = focusIndex - VISIBLE_ITEMS + 1;
-  }
-}
-
-void nspi::TitleSelectorMenu::focusPrevious(uint16_t steps) {
-  if (this->focusIndex < steps) {
-    this->focusIndex = 0;
-  }
-
-  if (this->focusIndex != 0) {
-    this->focusIndex -= steps;
-  }
-}
-
-void nspi::TitleSelectorMenu::focusNext(uint16_t steps) {
-  if (this->dummyData.size() == 0) {
-    this->focusIndex = 0;
-    return;
-  }
-
-  if (this->focusIndex + steps > this->dummyData.size()) {
-    this->focusIndex = this->dummyData.size() - 1;
-  }
-
-  if (this->focusIndex < this->dummyData.size() - 1) {
-    this->focusIndex += steps;
+  if (kDown & HidNpadButton_A) {
+    this->menuManager.next(new LoggerMenu(menuManager, pad));
   }
 }
 
@@ -167,6 +116,8 @@ static void populateTitleField(
 
 std::string nspi::TitleSelectorMenu::retrieveRawDataFromEndpoint(
     const std::string& endpoint) const {
+  Logger::debug("Fetching titles TitleSelectorMenu::retrieveRawDataFromEndpoint()");
+
   CURL* curl;
   CURLcode res;
   std::string responseBody = "";
@@ -189,7 +140,7 @@ std::string nspi::TitleSelectorMenu::retrieveRawDataFromEndpoint(
       std::stringstream ss;
       ss << "curl_easy_perform() failed: " << curl_easy_strerror(res);
 
-      std::cerr << ss.str() << std::endl;
+      Logger::error(ss.str());
     }
 
     curl_easy_cleanup(curl);
@@ -202,11 +153,12 @@ std::string nspi::TitleSelectorMenu::retrieveRawDataFromEndpoint(
 
 std::vector<nspi::Title> nspi::TitleSelectorMenu::retrieveTitlesFromRawData(
     const std::string& rawData) const {
+  Logger::debug("Parsing fetched data TitleSelectorMenu::retrieveTitlesFromRawData()");
   std::vector<Title> titles;
 
   nlohmann::json jsonData = nlohmann::json::parse(rawData, nullptr, false);
   if (jsonData.is_discarded()) {
-    std::cerr << "Failed to parse raw data into JSON.\n";
+    Logger::error("Failed to parse raw data into JSON");
     return titles;
   }
 
