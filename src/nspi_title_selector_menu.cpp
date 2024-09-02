@@ -85,13 +85,13 @@ void nspi::TitleSelectorMenu::handleInput() {
     contentLoaded = true;
   }
 
-  if (kDown & HidNpadButton_Y) {
+  if (kDown & HidNpadButton_A) {
     if (!dummyData.empty()) {
       this->menuManager.next(new TitleMenu(menuManager, pad, dummyData[focusIndex]));
     }
   }
 
-  if (kDown & HidNpadButton_A) {
+  if (kDown & HidNpadButton_Y) {
     this->menuManager.next(new LoggerMenu(menuManager, pad));
   }
 }
