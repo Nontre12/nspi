@@ -38,6 +38,9 @@ set(SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_title_selector_menu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_title_menu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_app.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_logger.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_logger_menu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nspi_selectable_menu.cpp
 )
 
 add_executable(${ELF_APP} ${SOURCE_FILES})
