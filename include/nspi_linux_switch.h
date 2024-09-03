@@ -34,7 +34,11 @@ static inline bool appletMainLoop(void) { return true; }
 // end applet.c
 
 // console.c
+typedef enum { debugDevice_NULL, debugDevice_SVC, debugDevice_CONSOLE } debugDevice;
+
 static inline void consoleInit(void*) {}
+
+static inline void consoleDebugInit(const debugDevice&) {}
 
 static inline void consoleExit(void*) {}
 
@@ -42,6 +46,12 @@ static inline void consoleUpdate(void*) {}
 
 static inline void consoleClear(void) { std::cout << "\033[2J\033[1;1H"; }
 // end console.c
+
+// nxlink.c
+static inline int nxlinkStdioForDebug(void) {}
+
+static inline int close(int) {}  // unistd.h
+// end nxlink
 
 // hid.c
 typedef struct HidAnalogStickState {
@@ -106,11 +116,11 @@ typedef enum {
   HidNpadButton_RightSR = 1UL << (27),       ///< SR button on Right Joy-Con
   HidNpadButton_Palma = 1UL << (28),         ///< Top button on Poké Ball Plus (Palma) controller
   HidNpadButton_Verification = 1UL << (29),  ///< Verification
-  HidNpadButton_HandheldLeftB = 1UL << (30), ///< B button on Left NES/HVC controller in Handheld mode
-  HidNpadButton_LagonCLeft = 1UL << (31),    ///< Left C button in N64 controller
-  HidNpadButton_LagonCUp = 1UL << (32),      ///< Up C button in N64 controller
-  HidNpadButton_LagonCRight = 1UL << (33),   ///< Right C button in N64 controller
-  HidNpadButton_LagonCDown = 1UL << (34),    ///< Down C button in N64 controller
+  HidNpadButton_HandheldLeftB = 1UL << (30),   ///< B button on Left NES/HVC controller in Handheld mode
+  HidNpadButton_LagonCLeft = 1UL << (31),  ///< Left C button in N64 controller
+  HidNpadButton_LagonCUp = 1UL << (32),    ///< Up C button in N64 controller
+  HidNpadButton_LagonCRight = 1UL << (33),  ///< Right C button in N64 controller
+  HidNpadButton_LagonCDown = 1UL << (34),   ///< Down C button in N64 controller
 
   HidNpadButton_AnyLeft = HidNpadButton_Left | HidNpadButton_StickLLeft |
                           HidNpadButton_StickRLeft,  ///< Bitmask containing all buttons that are

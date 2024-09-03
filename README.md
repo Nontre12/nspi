@@ -40,6 +40,34 @@ To build this project from source, you'll need to set up the appropriate develop
     nxlink -a xxx.xxx.xxx.xxx NSPi.nro
     ```
 
+## Debug (nxlink)
+
+0. [optional] **NOTE:** If using docker for building and debugging, you should run container with `--network=host`,
+or at least make NXLINK ports accessible.
+
+    ```cxx
+    // nxlink.h
+
+    #define NXLINK_SERVER_PORT 28280 ///< nxlink TCP server port
+    #define NXLINK_CLIENT_PORT 28771 ///< nxlink TCP client port
+    ```
+    Start docker container `docker run --rm -it -v "$(pwd):/app" --network=host --workdir=/app devkitpro/devkita64:latest bash`
+
+1. Build with `-DCMAKE_BUILD_TYPE=Debug` flag
+2. Start nxlink server:
+    ```bash
+    nxlink -s -a xxx.xxx.xxx.xxx NSPi.nro
+    ```
+3. Then you should start seeing logger output on nxlink server
+    ```bash
+    # nxlink -s -a 192.168.0.142 NSPi.nro
+    Sending NSPi.nro, 5834949 bytes
+    2082853 sent (35.70%), 174 blocks
+    starting server
+    server active ...
+    [DEBUG] Successfully established connection with nxlink server
+    [DEBUG] Started App::mainLoop()
+    ```
 
 ### Note for libnx
 In this project, instead of linking the precompiled libnx library provided by devkitPro, I preferred to add libnx compilation to the build process. This means that libnx will be built from source as part of this project's build process, ensuring that you have the latest version and any custom modifications needed for this project.

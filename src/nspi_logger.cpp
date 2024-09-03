@@ -1,11 +1,14 @@
 #include "nspi_logger.h"
 
+#include <iostream>
+
 const nspi::LogLevel nspi::Logger::level = nspi::LogLevel::DEBUG;
 std::vector<std::string> nspi::Logger::logContent;
 
 void nspi::Logger::log(const LogLevel& level, const std::string& content) {
   if (level >= Logger::level) {
     Logger::logContent.push_back(content);
+    std::cerr << content << std::endl;
   }
 }
 

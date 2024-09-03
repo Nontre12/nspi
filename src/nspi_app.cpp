@@ -18,9 +18,18 @@ nspi::App::App() : quit(false) { this->init(); }
 
 nspi::App::~App() { this->clean(); }
 
-void nspi::App::init() { socketInitializeDefault(); }
+void nspi::App::init() {
+  socketInitializeDefault();
 
-void nspi::App::clean() { socketExit(); }
+  this->console = new Console();
+}
+
+void nspi::App::clean() {
+  socketExit();
+
+  delete this->console;
+  this->console = nullptr;
+}
 
 bool nspi::App::shouldClose() const { return this->quit || !appletMainLoop(); }
 
@@ -63,7 +72,7 @@ void nspi::App::handleInput() {
 
 void nspi::App::draw() const {
   this->menuManager.draw();
-  this->console.update();
+  this->console->update();
 }
 
 void nspi::App::run() { this->mainLoop(); }
