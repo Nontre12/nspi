@@ -10,7 +10,7 @@ namespace nspi {
 
 class App {
  private:
-  Console console;
+  Console *console;
   Pad pad;
   MenuManager menuManager{pad};
 
