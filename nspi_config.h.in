@@ -5,4 +5,7 @@
 #cmakedefine APP_NAME "@APP_NAME@"
 #cmakedefine APP_AUTHOR_NAME "@APP_AUTHOR_NAME@"
 
+#define TITLEDB_JSON_ENDPOINT "https://raw.githubusercontent.com/blawar/titledb/master/ES.es.json"
+#define PROVIDER_ENDPOINT ""
+
 #endif  // NSPI_CONFIG_H_
