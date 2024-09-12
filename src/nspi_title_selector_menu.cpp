@@ -3,6 +3,7 @@
 #include "nspi_logger.h"
 #include "nspi_logger_menu.h"
 #include "nspi_title_menu.h"
+#include "nspi_config.h"
 
 // external
 #include <curl/curl.h>
@@ -78,7 +79,7 @@ void nspi::TitleSelectorMenu::handleInput() {
   static bool contentLoaded = false;
   if (kDown & HidNpadButton_Minus && !contentLoaded) {
     std::vector<nspi::Title> titles =
-        this->fetchTitles("https://raw.githubusercontent.com/blawar/titledb/master/ES.es.json");
+        this->fetchTitles(TITLEDB_JSON_ENDPOINT);
 
     this->dummyData = titles;
 
