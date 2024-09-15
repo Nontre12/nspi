@@ -1,9 +1,7 @@
 # IDE
 .vscode/
+.zed/
+.cache/
 
 # Build
 build/
-
-*.elf
-*.nacp
-*.nro
