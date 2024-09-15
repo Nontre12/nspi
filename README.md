@@ -64,8 +64,7 @@ To build this project from source, you'll need to set up the appropriate develop
     ```bash
     docker run --rm -it -v "$(pwd):/app" --workdir=/app devkitpro/devkita64:latest bash
     cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-    cd build
-    make -j$(nproc)
+    cmake --build build -j$(nproc)
     ```
 
 3. Send built package to switch with nxlink (optional)

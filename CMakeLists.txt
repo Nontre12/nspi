@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and version
 project(NSPi VERSION 0.0.5 LANGUAGES C CXX)
 
+# Clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,8 +25,8 @@ set(SWITCH_BUILD OFF)
 set(ELF_APP ${APP_NAME})
 
 if (CMAKE_SYSTEM_NAME MATCHES "Switch")
-set(SWITCH_BUILD ON)
-set(ELF_APP ${APP_NAME}.elf)
+    set(SWITCH_BUILD ON)
+    set(ELF_APP ${APP_NAME}.elf)
 endif()
 
 configure_file(nspi_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/nspi_config.h @ONLY)
@@ -52,7 +55,7 @@ target_include_directories(${ELF_APP} PRIVATE
 )
 
 if (SWITCH_BUILD)
-target_include_directories(${ELF_APP} PRIVATE /opt/devkitpro/portlibs/switch/include)
+    target_include_directories(${ELF_APP} PRIVATE /opt/devkitpro/portlibs/switch/include)
 endif()
 
 # Compilation flags
@@ -64,8 +67,8 @@ target_compile_options(${ELF_APP} PRIVATE
 )
 
 if (SWITCH_BUILD)
-# Linker flags
-target_link_options(${ELF_APP} PRIVATE
+    # Linker flags
+    target_link_options(${ELF_APP} PRIVATE
     -specs=${CMAKE_CURRENT_SOURCE_DIR}/lib/libnx/nx/switch.specs
     -fPIE
     -Wl,-Map,${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.map
@@ -75,31 +78,31 @@ endif()
 add_subdirectory(lib)
 
 if (SWITCH_BUILD)
-target_link_directories(${ELF_APP} PRIVATE /opt/devkitpro/portlibs/switch/lib)
+    target_link_directories(${ELF_APP} PRIVATE /opt/devkitpro/portlibs/switch/lib)
 endif()
 
 if (SWITCH_BUILD)
-target_link_libraries(${ELF_APP} PRIVATE nlohmann_json curl z nx)
+    target_link_libraries(${ELF_APP} PRIVATE nlohmann_json curl z nx)
 else()
-target_link_libraries(${ELF_APP} PRIVATE nlohmann_json curl z)
+    target_link_libraries(${ELF_APP} PRIVATE nlohmann_json curl z)
 endif()
 
 # Post-build steps
 if (SWITCH_BUILD)
-# Create LST file
-add_custom_command(TARGET ${ELF_APP} POST_BUILD
+    # Create LST file
+    add_custom_command(TARGET ${ELF_APP} POST_BUILD
     COMMAND ${CMAKE_NM} -CSn $<TARGET_FILE:${ELF_APP}> > ${APP_NAME}.lst
     COMMENT "Creating LST symbols file from ELF (debug purposes)"
 )
 
-# Create NACP file
-add_custom_command(TARGET ${ELF_APP} POST_BUILD
+    # Create NACP file
+    add_custom_command(TARGET ${ELF_APP} POST_BUILD
     COMMAND nacptool --create ${APP_NAME} ${APP_AUTHOR_NAME} ${APP_VERSION} ${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.nacp
     COMMENT "Creating NACP file"
 )
 
-# Convert ELF to NRO
-add_custom_command(TARGET ${ELF_APP} POST_BUILD
+    # Convert ELF to NRO
+    add_custom_command(TARGET ${ELF_APP} POST_BUILD
     COMMAND elf2nro $<TARGET_FILE:${ELF_APP}>
                     ${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.nro
                     --nacp=${CMAKE_CURRENT_BINARY_DIR}/${APP_NAME}.nacp
